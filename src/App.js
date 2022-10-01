@@ -3,6 +3,19 @@ import './App.scss';
 import Room from './Room'
 import UI from './UI'
 
+let globalID = 0;
+class Entity {
+  constructor (xPos, yPos, health) {
+    this.position = {
+      x: xPos,
+      y: yPos
+    };
+    this.health = health;
+    this.char = "R";  
+    this.ID = globalID;
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +27,10 @@ class App extends React.Component {
       playerPosition: {
         x: 2,
         y: 6,
+      },
+
+      entityContainer: {
+
       },
 
       playerStatus: {
@@ -35,52 +52,48 @@ class App extends React.Component {
           EV: 0,
           Int: 0,
           Dex: 0,
+          Spd: 1,
         },
 
+        time: 0,
         gold: 0,
+
+        char: "@",
       }
     }
   }
 
-  handleKeyDown = window.addEventListener("keydown", (e) => {
+  handleTurnActions = window.addEventListener("keydown", (e) => {
     switch (e.key) {
       case "ArrowUp":
         if (this.state.playerPosition.y > 0) {
           this.setState({
-            playerPosition: {
-              y: this.state.playerPosition.y - 1,
-              x: this.state.playerPosition.x,
-            }
+            playerPosition: {...this.state.playerPosition, y: this.state.playerPosition.y - 1},
+            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
           });
           break;
         } else { break; }
       case "ArrowDown":
         if (this.state.playerPosition.y < this.state.totalRows - 1) {
           this.setState({
-            playerPosition: {
-              y: this.state.playerPosition.y + 1,
-              x: this.state.playerPosition.x,
-            }
+            playerPosition: {...this.state.playerPosition, y: this.state.playerPosition.y + 1},
+            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
           });
           break;
         } else { break; }
       case "ArrowLeft":
         if (this.state.playerPosition.x > 0) {
           this.setState({
-            playerPosition: {
-              x: this.state.playerPosition.x - 1,
-              y: this.state.playerPosition.y,
-            }
+            playerPosition: {...this.state.playerPosition, x: this.state.playerPosition.x - 1},
+            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
           });
           break;
         } else { break; }
       case "ArrowRight":
         if (this.state.playerPosition.x < this.state.totalColumns - 1) {
           this.setState({
-            playerPosition: {
-              x: this.state.playerPosition.x + 1,
-              y: this.state.playerPosition.y,
-            }
+            playerPosition: {...this.state.playerPosition, x: this.state.playerPosition.x + 1},
+            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
           });
           break;
         } else { break; }
@@ -89,12 +102,32 @@ class App extends React.Component {
     }
   })
 
+  spawnerFunction = () => {
+
+    let thisEntity = new Entity(Math.floor(Math.random()*this.state.totalColumns), Math.floor(Math.random()*this.state.totalRows),Math.trunc(Math.random()*100))
+
+    this.setState({
+      entityContainer: {
+        ...this.state.entityContainer,
+        ["entity" + globalID++]: {
+          health: thisEntity.health,
+          x: thisEntity.position.x,
+          y: thisEntity.position.y,
+          char: thisEntity.char,
+        }
+      }
+    })
+    console.log(this.state.entityContainer)
+  }
+
   render() {
     return (
       <div id="container1">
-        <UI status={this.state.playerStatus} />
+        <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)} />
         <Room columns={this.state.totalColumns} rows={this.state.totalRows} 
-        playerPosition={this.state.playerPosition} />
+        playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus} 
+        entityStatus={this.state.entityContainer}
+        />
       </div>
     );
   }
