@@ -1,6 +1,11 @@
 import React from 'react';
 // import Entity from './Entity';
 
+const playerStyle = {
+
+}
+
+
 class Room extends React.Component {
 
   render() {
@@ -9,12 +14,11 @@ class Room extends React.Component {
     Array.from({ length: this.props.columns }, () => '.'));
 
     // y and x need to be flipped from what you would naturally think.
-    arrayMap[this.props.playerPosition.y][this.props.playerPosition.x] = `${this.props.playerStatus.char}`;
+    arrayMap[this.props.playerPosition.y][this.props.playerPosition.x] = <span style={playerStyle} key={"player"}>{this.props.playerStatus.char}</span>;
 
-    if (Object.keys(this.props.entityStatus).length > 1) {
+    if (Object.keys(this.props.entityStatus).length) {
       for (let i in this.props.entityStatus) {
-        arrayMap[i.y][i.x] = `x`;
-        console.log("hi")
+        arrayMap[this.props.entityStatus[i].y][this.props.entityStatus[i].x] = this.props.entityStatus[i].char;
       }
     }
 

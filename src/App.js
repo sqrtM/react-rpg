@@ -4,6 +4,7 @@ import Room from './Room'
 import UI from './UI'
 
 let globalID = 0;
+
 class Entity {
   constructor (xPos, yPos, health) {
     this.position = {
@@ -22,7 +23,7 @@ class App extends React.Component {
 
     this.state = {
       totalColumns: 32,
-      totalRows: 16,
+      totalRows: 18,
 
       playerPosition: {
         x: 2,
@@ -31,7 +32,8 @@ class App extends React.Component {
 
       entityContainer: {
 
-      },
+        },
+
 
       playerStatus: {
         name: "",
@@ -40,7 +42,7 @@ class App extends React.Component {
 
         health: {
           maxHealth: 100,
-          currentHealth: 100,
+          currentHealth: 45,
         },
         mana: {
           maxMana: 20,
@@ -118,6 +120,7 @@ class App extends React.Component {
       }
     })
     console.log(this.state.entityContainer)
+
   }
 
   render() {
@@ -126,7 +129,7 @@ class App extends React.Component {
         <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)} />
         <Room columns={this.state.totalColumns} rows={this.state.totalRows} 
         playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus} 
-        entityStatus={this.state.entityContainer}
+        entityStatus={this.state.entityContainer} globalID={globalID}
         />
       </div>
     );
