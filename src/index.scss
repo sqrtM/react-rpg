@@ -7,7 +7,7 @@ body {
 
   -webkit-user-select:none;
   -moz-user-select:-moz-none;
-  -ms-user-select:none;
+  /* -ms-user-select:none; */
   user-select:none;
 
   background-color: black;
@@ -19,8 +19,8 @@ body {
 }
 
 .room {
-  color: red;
-  @include random-color();
+  color: white;
+  /* @include random-color(); */
   font-size: clamp(0.75rem, -0.875rem + 5.333vw, 1.8rem);
 }
 
@@ -32,7 +32,7 @@ body {
 }
 
 .UI {
-  margin: 1%;
+  margin: 5px;
   font-size: large;
   display: flex;
   flex-direction: column;

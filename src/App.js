@@ -42,7 +42,7 @@ class App extends React.Component {
 
         health: {
           maxHealth: 100,
-          currentHealth: 45,
+          currentHealth: 100,
         },
         mana: {
           maxMana: 20,
@@ -126,10 +126,13 @@ class App extends React.Component {
   render() {
     return (
       <div id="container1">
-        <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)} />
+        <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)} 
+          entityStatus={this.state.entityContainer}
+        />
+
         <Room columns={this.state.totalColumns} rows={this.state.totalRows} 
-        playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus} 
-        entityStatus={this.state.entityContainer} globalID={globalID}
+          playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus} 
+          entityStatus={this.state.entityContainer} globalID={globalID}
         />
       </div>
     );
