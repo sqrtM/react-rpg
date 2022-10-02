@@ -6,14 +6,13 @@ import UI from './UI'
 let globalID = 0;
 
 class Entity {
-  constructor (xPos, yPos, health) {
+  constructor(xPos, yPos, health) {
     this.position = {
       x: xPos,
       y: yPos
     };
     this.health = health;
-    this.char = "R";  
-    this.ID = globalID;
+    this.char = "R";
   }
 }
 
@@ -32,7 +31,7 @@ class App extends React.Component {
 
       entityContainer: {
 
-        },
+      },
 
 
       playerStatus: {
@@ -41,12 +40,12 @@ class App extends React.Component {
         race: "",
 
         health: {
-          maxHealth: 100,
-          currentHealth: 100,
+          maxHealth: 43,
+          currentHealth: 16,
         },
         mana: {
-          maxMana: 20,
-          currentMana: 20,
+          maxMana: 8,
+          currentMana: 1,
         },
 
         stats: {
@@ -65,37 +64,93 @@ class App extends React.Component {
     }
   }
 
+  initiateMeleeCombat(entityIndex) {
+    this.setState({
+      entityContainer: {
+        ...this.state.entityContainer,
+        [entityIndex]: {
+          ...this.state.entityContainer[entityIndex],
+          health: this.state.entityContainer[entityIndex].health - 5,
+        }
+      }
+    })
+    if (this.state.entityContainer[entityIndex].health <= 0) {
+      this.setState({
+        entityContainer: {
+          ...this.state.entityContainer,
+          [entityIndex]: {
+            ...this.state.entityContainer[entityIndex],
+            alive: false,
+          }
+        }
+      })
+    }
+  }
+
   handleTurnActions = window.addEventListener("keydown", (e) => {
+    // movement and collision checking when player moves
     switch (e.key) {
       case "ArrowUp":
         if (this.state.playerPosition.y > 0) {
+          if (Object.keys(this.state.entityContainer).length > 0) {
+            for (let i in this.state.entityContainer) {
+              if ((this.state.entityContainer[i].x === this.state.playerPosition.x && this.state.entityContainer[i].y === this.state.playerPosition.y - 1) && this.state.entityContainer[i].alive) {
+                this.initiateMeleeCombat(i);
+                return;
+              }
+            }
+          }
           this.setState({
-            playerPosition: {...this.state.playerPosition, y: this.state.playerPosition.y - 1},
-            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
+            playerPosition: { ...this.state.playerPosition, y: this.state.playerPosition.y - 1 },
+            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
           break;
         } else { break; }
       case "ArrowDown":
         if (this.state.playerPosition.y < this.state.totalRows - 1) {
+          if (Object.keys(this.state.entityContainer).length > 0) {
+            for (let i in this.state.entityContainer) {
+              if ((this.state.entityContainer[i].x === this.state.playerPosition.x && this.state.entityContainer[i].y === this.state.playerPosition.y + 1) && this.state.entityContainer[i].alive) {
+                this.initiateMeleeCombat(i);
+                return;
+              }
+            }
+          }
           this.setState({
-            playerPosition: {...this.state.playerPosition, y: this.state.playerPosition.y + 1},
-            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
+            playerPosition: { ...this.state.playerPosition, y: this.state.playerPosition.y + 1 },
+            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
           break;
         } else { break; }
       case "ArrowLeft":
         if (this.state.playerPosition.x > 0) {
+          if (Object.keys(this.state.entityContainer).length > 0) {
+            for (let i in this.state.entityContainer) {
+              if ((this.state.entityContainer[i].x === this.state.playerPosition.x - 1 && this.state.entityContainer[i].y === this.state.playerPosition.y) && this.state.entityContainer[i].alive) {
+                this.initiateMeleeCombat(i);
+                return;
+              }
+            }
+          }
           this.setState({
-            playerPosition: {...this.state.playerPosition, x: this.state.playerPosition.x - 1},
-            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
+            playerPosition: { ...this.state.playerPosition, x: this.state.playerPosition.x - 1 },
+            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
           break;
         } else { break; }
       case "ArrowRight":
         if (this.state.playerPosition.x < this.state.totalColumns - 1) {
+          if (Object.keys(this.state.entityContainer).length > 0) {
+            for (let i in this.state.entityContainer) {
+              if ((this.state.entityContainer[i].x === this.state.playerPosition.x + 1 && this.state.entityContainer[i].y === this.state.playerPosition.y) && this.state.entityContainer[i].alive) {
+                this.initiateMeleeCombat(i);
+                return;
+              }
+            }
+          }
           this.setState({
-            playerPosition: {...this.state.playerPosition, x: this.state.playerPosition.x + 1},
-            playerStatus: {...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2)},
+            playerPosition: { ...this.state.playerPosition, x: this.state.playerPosition.x + 1 },
+            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
           break;
         } else { break; }
@@ -106,7 +161,7 @@ class App extends React.Component {
 
   spawnerFunction = () => {
 
-    let thisEntity = new Entity(Math.floor(Math.random()*this.state.totalColumns), Math.floor(Math.random()*this.state.totalRows),Math.trunc(Math.random()*100))
+    let thisEntity = new Entity(Math.floor(Math.random() * this.state.totalColumns), Math.floor(Math.random() * this.state.totalRows), Math.trunc(Math.random() * 100))
 
     this.setState({
       entityContainer: {
@@ -116,6 +171,7 @@ class App extends React.Component {
           x: thisEntity.position.x,
           y: thisEntity.position.y,
           char: thisEntity.char,
+          alive: true,
         }
       }
     })
@@ -123,15 +179,17 @@ class App extends React.Component {
 
   }
 
+
+
   render() {
     return (
       <div id="container1">
-        <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)} 
+        <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)}
           entityStatus={this.state.entityContainer}
         />
 
-        <Room columns={this.state.totalColumns} rows={this.state.totalRows} 
-          playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus} 
+        <Room columns={this.state.totalColumns} rows={this.state.totalRows}
+          playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
           entityStatus={this.state.entityContainer} globalID={globalID}
         />
       </div>

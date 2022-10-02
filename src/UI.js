@@ -55,7 +55,8 @@ class UI extends React.Component {
         </div>
 
         <div className='entityInfo'>
-          {entityViewer.map(i => <div key={`key-${i}`}>{i}</div>)}
+          {entityViewer.map((i, index) => 
+          <div key={`key-${index}`}>{i}</div>)}
         </div>
       </div>
     );

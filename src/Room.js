@@ -18,7 +18,9 @@ class Room extends React.Component {
 
     if (Object.keys(this.props.entityStatus).length) {
       for (let i in this.props.entityStatus) {
-        arrayMap[this.props.entityStatus[i].y][this.props.entityStatus[i].x] = this.props.entityStatus[i].char;
+        if (this.props.entityStatus[i].alive) {
+          arrayMap[this.props.entityStatus[i].y][this.props.entityStatus[i].x] = this.props.entityStatus[i].char;
+        }
       }
     }
 
