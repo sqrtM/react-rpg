@@ -12,7 +12,7 @@ class Entity {
       y: yPos
     };
     this.health = health;
-    this.char = "R";
+    this.char = "µ";
   }
 }
 
@@ -30,7 +30,7 @@ class App extends React.Component {
       },
 
       entityContainer: {
-
+        // this is where all enemy information goes
       },
 
 
@@ -51,6 +51,7 @@ class App extends React.Component {
         stats: {
           AC: 0,
           EV: 0,
+          Atk: 5,
           Int: 0,
           Dex: 0,
           Spd: 1,
@@ -64,28 +65,7 @@ class App extends React.Component {
     }
   }
 
-  initiateMeleeCombat(entityIndex) {
-    this.setState({
-      entityContainer: {
-        ...this.state.entityContainer,
-        [entityIndex]: {
-          ...this.state.entityContainer[entityIndex],
-          health: this.state.entityContainer[entityIndex].health - 5,
-        }
-      }
-    })
-    if (this.state.entityContainer[entityIndex].health <= 0) {
-      this.setState({
-        entityContainer: {
-          ...this.state.entityContainer,
-          [entityIndex]: {
-            ...this.state.entityContainer[entityIndex],
-            alive: false,
-          }
-        }
-      })
-    }
-  }
+
 
   handleTurnActions = window.addEventListener("keydown", (e) => {
     // movement and collision checking when player moves
@@ -104,6 +84,7 @@ class App extends React.Component {
             playerPosition: { ...this.state.playerPosition, y: this.state.playerPosition.y - 1 },
             playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
+          this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
       case "ArrowDown":
@@ -120,6 +101,7 @@ class App extends React.Component {
             playerPosition: { ...this.state.playerPosition, y: this.state.playerPosition.y + 1 },
             playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
+          this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
       case "ArrowLeft":
@@ -136,6 +118,7 @@ class App extends React.Component {
             playerPosition: { ...this.state.playerPosition, x: this.state.playerPosition.x - 1 },
             playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
+          this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
       case "ArrowRight":
@@ -152,12 +135,99 @@ class App extends React.Component {
             playerPosition: { ...this.state.playerPosition, x: this.state.playerPosition.x + 1 },
             playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
           });
+          this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
       default:
         break;
     }
   })
+
+  initiateMeleeCombat(entityIndex) {
+    this.setState({
+      entityContainer: {
+        ...this.state.entityContainer,
+        [entityIndex]: {
+          ...this.state.entityContainer[entityIndex],
+          health: this.state.entityContainer[entityIndex].health - this.state.playerStatus.stats.Atk,
+        }
+      }
+    })
+    if (this.state.entityContainer[entityIndex].health - this.state.playerStatus.stats.Atk <= 0) {
+      this.setState({
+        entityContainer: {
+          ...this.state.entityContainer,
+          [entityIndex]: {
+            ...this.state.entityContainer[entityIndex],
+            alive: false,
+            health: 0
+          }
+        }
+      })
+    }
+  }
+
+  entityTurn(entityObj, targetPosition) {
+
+    let xDiff = null;
+    let yDiff = null;
+    let randChoice = null;
+
+    for (const i in entityObj) {
+      
+      xDiff = entityObj[i].x - targetPosition.x
+      yDiff = entityObj[i].y - targetPosition.y
+
+      if (xDiff === 1) { 
+        randChoice = false 
+        } else if (yDiff === 1) { 
+          randChoice = true 
+        } else {                                                                 
+          randChoice = Math.random() > 0.5 ? true : Math.random() > 0.1 ? false : null
+        }
+
+      if (randChoice === false) {
+        yDiff > 1 ? this.setState({
+          entityContainer: {
+            ...this.state.entityContainer,
+            [i]: { 
+              ...entityObj[i],
+              y: entityObj[i].y - 1 
+            }
+          }
+        })
+          : this.setState({ 
+            entityContainer: { 
+              ...this.state.entityContainer,
+              [i]: { 
+                ...entityObj[i],
+                y: entityObj[i].y + 1 
+              } 
+            } 
+          })
+      }
+      else if (randChoice === true) {
+        xDiff > 1 ? this.setState({ 
+          entityContainer: { 
+            ...this.state.entityContainer,
+            [i]: { 
+              ...entityObj[i],
+              x: entityObj[i].x - 1 
+            } 
+          } 
+        }) 
+        : this.setState({ 
+          entityContainer: { 
+            ...this.state.entityContainer,
+            [i]: { 
+              ...entityObj[i],
+              x: entityObj[i].x + 1 
+            } 
+          } 
+        })
+      }
+    }    
+  }
 
   spawnerFunction = () => {
 
@@ -196,5 +266,7 @@ class App extends React.Component {
     );
   }
 }
+
+
 
 export default App;
