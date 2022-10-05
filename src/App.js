@@ -65,8 +65,6 @@ class App extends React.Component {
     }
   }
 
-
-
   handleTurnActions = window.addEventListener("keydown", (e) => {
     // movement and collision checking when player moves
     switch (e.key) {
@@ -167,67 +165,101 @@ class App extends React.Component {
     }
   }
 
+  // 1.) MAKE THIS MORE READABLE.
+  // 2.) MAKE ENEMIES NOT STACK
   entityTurn(entityObj, targetPosition) {
 
     let xDiff = null;
     let yDiff = null;
     let randChoice = null;
+    let entArr = [];
+    let DummyObj = {};
 
-    for (const i in entityObj) {
-      
-      xDiff = entityObj[i].x - targetPosition.x
-      yDiff = entityObj[i].y - targetPosition.y
+    //Grabs all objects and assigns them an 
+    //x and y distance from the target (player)
+    //we then take all objects and push them
+    //into a new array for easy iteration
+    for (let i of Object.entries(entityObj)) {
 
-      if (xDiff === 1) { 
-        randChoice = false 
-        } else if (yDiff === 1) { 
-          randChoice = true 
-        } else {                                                                 
-          randChoice = Math.random() > 0.5 ? true : Math.random() > 0.1 ? false : null
-        }
+      i[1].xDiff = i[1].x - targetPosition.x
+      i[1].yDiff = i[1].y - targetPosition.y
 
-      if (randChoice === false) {
-        yDiff > 1 ? this.setState({
-          entityContainer: {
-            ...this.state.entityContainer,
-            [i]: { 
-              ...entityObj[i],
-              y: entityObj[i].y - 1 
+      entArr.push(i);
+
+    }
+
+
+    entArr.forEach(i => {
+      //enemies decide randomly if they want to
+      //shorten their x or y distance to the player,
+      //meaning they take basically a straight line,
+      //but with some unpredictablility
+
+      //false means Y direction, true means X direction.
+      // currently the odds are 50 X, 40 Y, 10 do nothing
+      if (xDiff === 1) {
+        randChoice = false
+      } else if (yDiff === 1) {
+        randChoice = true
+      } else {
+        randChoice = Math.random() > 0.5 ? true : Math.random() > 0.1 ? false : null
+      }
+
+      //We then take a dummy object and start assigning values to it
+      //the same way we would assign state directly.
+
+      //we do this with a dummy object because of the asyncronicity
+      //of the setState function; this lets us update everything 
+      //simultaneously much more easily.
+      for (let j = 0; j < entArr.length - 1; j++) {
+        if (randChoice === false) {
+          //get the "jth" index of the entity array we made earlier
+          //then take the first index of that (because the 0th index
+          //is the NAME of the entity).
+          entArr[j][1].yDiff > 1 ? DummyObj = {
+            ...DummyObj,
+            [entArr[j][0]]: {
+              ...entArr[j][1],
+              y: entArr[j][1].y - 1
             }
           }
-        })
-          : this.setState({ 
-            entityContainer: { 
-              ...this.state.entityContainer,
-              [i]: { 
-                ...entityObj[i],
-                y: entityObj[i].y + 1 
-              } 
-            } 
-          })
+            : DummyObj = {
+              ...DummyObj,
+              [entArr[j][0]]: {
+                ...entArr[j][1],
+                y: entArr[j][1].y + 1
+              }
+            }
+        }
+        else if (randChoice === true) {
+          entArr[j][1].xDiff > 1 ? DummyObj = {
+            ...DummyObj,
+            [entArr[j][0]]: {
+              ...entArr[j][1],
+              x: entArr[j][1].x - 1
+            }
+          }
+            : DummyObj = {
+              ...DummyObj,
+              [entArr[j][0]]: {
+                ...entArr[j][1],
+                x: entArr[j][1].x + 1
+              }
+            }
+        }
       }
-      else if (randChoice === true) {
-        xDiff > 1 ? this.setState({ 
-          entityContainer: { 
-            ...this.state.entityContainer,
-            [i]: { 
-              ...entityObj[i],
-              x: entityObj[i].x - 1 
-            } 
-          } 
-        }) 
-        : this.setState({ 
-          entityContainer: { 
-            ...this.state.entityContainer,
-            [i]: { 
-              ...entityObj[i],
-              x: entityObj[i].x + 1 
-            } 
-          } 
-        })
-      }
-    }    
+      //after the dummyobject is settled, then we 
+      //can add it to state and update all other objects on screen.
+      this.setState({
+        entityContainer: {
+          ...this.state.entityContainer,
+          ...DummyObj
+        }
+      })
+    });
   }
+
+
 
   spawnerFunction = () => {
 
@@ -266,7 +298,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 
 export default App;
