@@ -211,7 +211,7 @@ class App extends React.Component {
       //we do this with a dummy object because of the asyncronicity
       //of the setState function; this lets us update everything 
       //simultaneously much more easily.
-      for (let j = 0; j < entArr.length - 1; j++) {
+      for (let j = 0; j < entArr.length; j++) {
         if (randChoice === false) {
           //get the "jth" index of the entity array we made earlier
           //then take the first index of that (because the 0th index
@@ -246,7 +246,7 @@ class App extends React.Component {
                 x: entArr[j][1].x + 1
               }
             }
-        }
+        } else { return; }
       }
       //after the dummyobject is settled, then we 
       //can add it to state and update all other objects on screen.
