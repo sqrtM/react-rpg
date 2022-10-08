@@ -2,6 +2,7 @@ import React from 'react';
 import './App.scss';
 import Room from './Room'
 import UI from './UI'
+import TextLog from './textLog'
 
 // many many thanks to Joe Iddon's exceptionally concise
 // and useful perlin generation algorithm here. 
@@ -56,18 +57,21 @@ let globalID = 0;
 class TileEmpty {
   constructor() {
     this.char = "."
+    this.style = "emptyStyle"
   }
 }
 
 class TileWall {
   constructor() {
     this.char = "#"
+    this.style = "wallStyle"
   }
 }
 
 class TileWater {
   constructor() {
     this.char = "~"
+    this.style = "waterStyle"
   }
 }
 
@@ -97,7 +101,7 @@ class App extends React.Component {
       for (let i = 0; i < r; i++) {
         for (let j = 0; j < c; j++) {
           let v = perlin.get(i/r,j/c)
-          if (v >= 0.6) {
+          if (v >= 0.2) {
             arr[i][j] = new TileWater()
           } else if (v <= 0) {
             arr[i][j] = new TileWall()
@@ -343,7 +347,7 @@ class App extends React.Component {
             ...this.state.entityContainer,
             ...DummyObj
           }
-        }, console.log(entArr[j][1]))
+        })
       }
     });
   }
@@ -374,16 +378,22 @@ class App extends React.Component {
 
   render() {
     return (
-      <div id="container1">
-        <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)}
-          entityStatus={this.state.entityContainer}
-        />
+      <div id="appContainer">
+        <div id="container1">
 
         <Room columns={this.state.totalColumns} rows={this.state.totalRows}
-          playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
-          entityStatus={this.state.entityContainer} globalID={globalID}
-          roomArrProp={this.state.roomArray(this.state.totalRows, this.state.totalColumns)}
-        />
+            playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
+            entityStatus={this.state.entityContainer} globalID={globalID}
+            roomArrProp={this.state.roomArray(this.state.totalRows, this.state.totalColumns)}
+          />
+
+          <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)}
+            entityStatus={this.state.entityContainer}
+          />
+
+          
+        </div>
+        <TextLog />
       </div>
     );
   }

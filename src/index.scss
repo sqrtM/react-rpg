@@ -24,11 +24,18 @@ body {
   font-size: clamp(0.75rem, -0.875rem + 5.333vw, 1.8rem);
 }
 
+#appContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
 #container1 {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
 }
 
 .UI {
@@ -38,4 +45,30 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
+}
+
+.playerInfo {
+  display: flex;
+}
+
+.textLog {
+  margin: 5px;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  align-items: stretch;
+}
+
+/* TILE STYLES BELOW ... */
+.waterStyle {
+  color: blue
+}
+
+.wallStyle {
+  color: brown
+}
+
+.emptyStyle {
+  color: green
 }

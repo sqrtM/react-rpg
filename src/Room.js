@@ -1,4 +1,6 @@
 import React from 'react';
+import './App.scss';
+
 // import Entity from './Entity';
 
 /*
@@ -29,7 +31,7 @@ class Room extends React.Component {
       let yRange = Math.floor(y/2);
       let xRange = Math.floor(x/2);
       let leftHandSideView = 0;
-      if (pX < xRange) { xRange = pX; leftHandSideView = x - 3 - pX }
+      if (pX < xRange) { xRange = pX; leftHandSideView = x - (pX + Math.floor(x/2)) }
   
       let arr = [];
       for (let i = pY - yRange; i < pY + yRange + 1; i++) {
@@ -41,7 +43,7 @@ class Room extends React.Component {
       return arr;
     }
     
-    let defaultView = viewport(45,23)
+    let defaultView = viewport(35,17)
 
 
 
@@ -50,15 +52,14 @@ class Room extends React.Component {
 
 
     //let arrayMap = (this.props.roomArrProp.map((i, index) => {return <div>{(this.props.roomArrProp[index].map((j) => j.char))}</div>;}))
-    let arrayMap = (defaultView.map((i, index) => {return <div>{(defaultView[index].map((j) => j.char))}</div>;}));
-
+    console.log(defaultView)
 
 
 
     return (
       <div className="room">
 
-        {arrayMap}
+        {defaultView.map((i, index) => {return <div key={`key-${index}`}>{(defaultView[index].map((j) => <span className={`${j.style}`}>{j.char}</span>))}</div>;})}
 
       </div>
     );

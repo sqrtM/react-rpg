@@ -31,22 +31,27 @@ class UI extends React.Component {
     return (
       <div className="UI">
         <div className='playerInfo'>
-          Health : {this.props.status.health.currentHealth}/{this.props.status.health.maxHealth}
-          <span style={this.percentHealth === 100 ? { color: 'green' } : this.percentHealth >= 75 ? { color: 'limeGreen' }
+          {this.props.status.health.currentHealth}/{this.props.status.health.maxHealth}...
+          
+          <br />
+
+          {this.props.status.mana.currentMana}/{this.props.status.mana.maxMana}  ....
+
+
+          <br />
+
+          <div id="healthBar" style={this.percentHealth === 100 ? { color: 'green' } : this.percentHealth >= 75 ? { color: 'limeGreen' }
             : this.percentHealth >= 50 ? { color: 'yellow' } : this.percentHealth >= 25 ? { color: 'orange' }
             : this.percentHealth >= 0 ? { color: 'red' } : { color: 'white' }}>
             {" "}{this.renderBar(healthArray, this.percentHealth)}
-          </span>
-          <br />
 
-          Mana : {this.props.status.mana.currentMana}/{this.props.status.mana.maxMana}
-          <span style={this.percentMana === 100 ? { color: '#0000CC' } : this.percentMana >= 75 ? { color: '#0033CC' }
+            <div id="manaBar" style={this.percentMana === 100 ? { color: '#0000CC' } : this.percentMana >= 75 ? { color: '#0033CC' }
             : this.percentMana >= 50 ? { color: '#0066CC' } : this.percentMana >= 25 ? { color: '#0099CC' }
             : this.percentMana >= 0 ? { color: '#00CCCC' } : { color: '#00FFCC' }}>
             {" "}{this.renderBar(manaArray, this.percentMana)}
-          </span>
+          </div>
 
-          <br />
+          </div>
 
           Time : {this.props.status.time} <br />
 
