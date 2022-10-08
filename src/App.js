@@ -115,8 +115,8 @@ class App extends React.Component {
     },
 
       playerPosition: {
-        x: 2,
-        y: 6,
+        x: 20,
+        y: 20,
       },
 
       entityContainer: {
