@@ -24,6 +24,12 @@ things i want (semi-to-do list, semi-asperational thoughts list. not in order)
 7. magic
 8. scrolls and books
 
+another idea i've always wanted in a game like this is having enemies whose speed is based on player stats (a la DCSS),
+but also enemies whose speed is REAL time, giving you incentive to take different stategic approaches with different enemy types.
+
+(for example, it could really lend itself well to a scary, high-tension moment if you were running away from a monster who took a turn
+every, say, 2 seconds regardless of your stats. an interesting use-case for this could be if you were in a dungeon of some kind and you read signs that say "ohh, beware of the scary monster" or whatever. then, when you take the treasure, the room caves in and a monster wakes up. you then have to hope your dig stat is fast enough to get you out of the room before the monster reaches you in, say, 15 real-world seconds. could be interesting! i always thought a tiny, tiny touch of real-time action could spice up something like DCSS. maybe this is one way of doing so.)
+
 we'll see where we go from there.
 
 thanks!
