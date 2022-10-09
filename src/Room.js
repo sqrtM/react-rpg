@@ -37,7 +37,7 @@ class Room extends React.Component {
     // the view is, and we ONLY UPDATE
     // the squares in view. 
 
-    let defaultView = viewport(50,20);
+    let defaultView = viewport(50,18);
     refreshView(defaultView)
 
     // then, we add all the entities which should be on screen,

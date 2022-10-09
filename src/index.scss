@@ -51,14 +51,26 @@ body {
   display: flex;
 }
 
-.textLog {
-  margin: 5px;
-  font-size: large;
-  display: flex;
-  flex-direction: column;
-  align-self: flex-end;
-  align-items: stretch;
+.textLog::-webkit-scrollbar {
+  display: none;
 }
+
+.textLog {
+  margin: 2px;
+  height: 127px;
+  width: 90%;
+  font-size: 20px;
+  overflow: scroll;
+  align-self: flex-start;
+  align-items: stretch;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+
+
+
 
 /* TILE STYLES BELOW ... */
 .deepWaterStyle {
@@ -70,17 +82,21 @@ body {
 }
 
 .shoreStyle {
-  color: lightsalmon
+  color: sandybrown
 }
 
 .emptyStyle {
-  color: green
+  color: darkolivegreen
 }
 
 .slopeStyle {
-  color:lightseagreen
+  color:darkkhaki
+}
+
+.mountainStyle {
+  color: grey
 }
 
 .wallStyle {
-  color: grey
+  color: darkslategrey
 }

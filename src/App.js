@@ -4,10 +4,10 @@ import Room from './Room'
 import UI from './UI'
 import TextLog from './textLog'
 
-// many many thanks to Joe Iddon's exceptionally concise
-// and useful perlin generation algorithm here. 
-// https://github.com/joeiddon/perlin
 let perlin = {
+  // many many thanks to Joe Iddon's exceptionally concise
+  // and useful perlin generation algorithm here. 
+  // https://github.com/joeiddon/perlin
   rand_vect: function () {
     let theta = Math.random() * 2 * Math.PI;
     return { x: Math.cos(theta), y: Math.sin(theta) };
@@ -49,8 +49,8 @@ let perlin = {
     this.memory[[x, y]] = v;
     return v;
   }
-}
-perlin.seed();
+}; perlin.seed();
+
 
 let globalID = 0;
 
@@ -58,8 +58,22 @@ class TileWall {
   constructor() {
     this.defaultChar = "#";
     this.style = "wallStyle";
+    this.speedMod = 3;
     this.contents = {
       char: "#",
+      walkable: false,
+    };
+  }
+}
+
+class TileMountain {
+  constructor() {
+    this.defaultChar = "%";
+    this.style = "mountainStyle";
+    this.speedMod = 1.8;
+    this.contents = {
+      char: "%",
+      walkable: true,
     };
   }
 }
@@ -68,8 +82,10 @@ class TileSlope {
   constructor() {
     this.defaultChar = "/";
     this.style = "slopeStyle";
+    this.speedMod = 1.4;
     this.contents = {
       char: "/",
+      walkable: true,
     };
   }
 }
@@ -78,8 +94,10 @@ class TileEmpty {
   constructor() {
     this.defaultChar = ".";
     this.style = "emptyStyle";
+    this.speedMod = 1;
     this.contents = {
       char: ".",
+      walkable: true,
     };
   }
 }
@@ -88,8 +106,10 @@ class TileShore {
   constructor() {
     this.defaultChar = "°";
     this.style = "shoreStyle";
+    this.speedMod = 1.1;
     this.contents = {
-      char: "°"
+      char: "°",
+      walkable: true,
     };
   }
 }
@@ -98,18 +118,22 @@ class TileWater {
   constructor() {
     this.defaultChar = "~";
     this.style = "waterStyle";
+    this.speedMod = 1.75;
     this.contents = {
       char: "~",
+      walkable: true,
     };
   }
 }
 
 class TileDeepWater {
   constructor() {
-    this.defaultChar = "≊"
+    this.defaultChar = "≈"
     this.style = "deepWaterStyle";
+    this.speedMod = 3;
     this.contents = {
-      char: "≊"
+      char: "≈",
+      walkable: false,
     };
   }
 }
@@ -141,17 +165,19 @@ class App extends React.Component {
 
         for (let i = 0; i < r; i++) {
           for (let j = 0; j < c; j++) {
-            let v = perlin.get(i/c*(c>>>4), j/r*(r>>>4));
+            let v = perlin.get(i / c * (c >>> 4), j / r * (r >>> 4));
             console.log(v)
-            if (v >= 0.5) {
+            if (v >= 0.4) {
               arr[i][j] = new TileWall()
-            } else if (v >= 0.3) {
-              arr[i][j] = new TileSlope()
+            } else if (v > 0.1) {
+              arr[i][j] = new TileMountain()
             } else if (v >= 0) {
+              arr[i][j] = new TileSlope()
+            } else if (v >= -0.3) {
               arr[i][j] = new TileEmpty()
-            } else if (v >= -0.05) {
+            } else if (v >= -0.35) {
               arr[i][j] = new TileShore()
-            } else if (v >= -0.8) {
+            } else if (v >= -0.65) {
               arr[i][j] = new TileWater()
             } else { arr[i][j] = new TileDeepWater() }
           }
@@ -163,8 +189,8 @@ class App extends React.Component {
       },
 
       playerPosition: {
-        x: 20,
-        y: 20,
+        x: 200,
+        y: 200,
       },
 
       entityContainer: {
@@ -185,13 +211,26 @@ class App extends React.Component {
           maxMana: 8,
           currentMana: 8,
         },
+        hunger: {
+          maxHealth: 100,
+          currentHealth: 100,
+        },
+        sanity: {
+          maxSanity: 10,
+          currentSanity: 10,
+        },
+        rage: {
+          maxRage: 25,
+          currentRage: 0,
+        },
+        
 
         stats: {
-          AC: 0,
-          EV: 0,
+          AC: 3,
+          EV: 9,
           Atk: 5,
-          Int: 0,
-          Dex: 0,
+          Int: 4,
+          Dex: 2,
           Spd: 1,
         },
 
@@ -217,8 +256,12 @@ class App extends React.Component {
             }
           }
           this.setState({
-            playerPosition: { ...this.state.playerPosition, y: this.state.playerPosition.y - 1 },
-            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
+            playerPosition: {
+              ...this.state.playerPosition, y: this.state.playerPosition.y - 1
+            },
+            playerStatus: {
+              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+            },
 
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -235,8 +278,13 @@ class App extends React.Component {
             }
           }
           this.setState({
-            playerPosition: { ...this.state.playerPosition, y: this.state.playerPosition.y + 1 },
-            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
+            playerPosition: {
+              ...this.state.playerPosition, y: this.state.playerPosition.y + 1
+            }
+            ,
+            playerStatus: {
+              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+            },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
@@ -252,8 +300,12 @@ class App extends React.Component {
             }
           }
           this.setState({
-            playerPosition: { ...this.state.playerPosition, x: this.state.playerPosition.x - 1 },
-            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
+            playerPosition: {
+              ...this.state.playerPosition, x: this.state.playerPosition.x - 1
+            },
+            playerStatus: {
+              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+            },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
@@ -269,12 +321,22 @@ class App extends React.Component {
             }
           }
           this.setState({
-            playerPosition: { ...this.state.playerPosition, x: this.state.playerPosition.x + 1 },
-            playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd).toFixed(2) },
+            playerPosition: {
+              ...this.state.playerPosition, x: this.state.playerPosition.x + 1
+            },
+            playerStatus: {
+              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+            },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
+      case " ": // spacebar
+        this.setState({
+          playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + 1).toFixed(2) },
+        });
+        this.entityTurn(this.state.entityContainer, this.state.playerPosition);
+        break;
       default:
         break;
     }
@@ -303,6 +365,7 @@ class App extends React.Component {
         }
       })
     }
+    this.entityTurn(this.state.entityContainer, this.state.playerPosition);
   }
 
   // 1.) MAKE THIS MORE READABLE.
@@ -352,40 +415,42 @@ class App extends React.Component {
       for (let j = 0; j < entArr.length; j++) {
         // if entity is not alive, do not move it
         if (entArr[j][1].alive) {
-          if (entArr[j][1].randChoice === false) {
-            //get the "jth" index of the entity array we made earlier
-            //then take the first index of that (because the 0th index
-            //is the NAME of the entity).
-            entArr[j][1].yDiff >= 0 ? DummyObj = {
-              ...DummyObj,
-              [entArr[j][0]]: {
-                ...entArr[j][1],
-                y: entArr[j][1].y - 1
-              }
-            }
-              : DummyObj = {
+          if (Math.abs(entArr[j][1].yDiff + entArr[j][1].xDiff) != 1) {
+            if (entArr[j][1].randChoice === false) {
+              //get the "jth" index of the entity array we made earlier
+              //then take the first index of that (because the 0th index
+              //is the NAME of the entity).
+              entArr[j][1].yDiff >= 0 ? DummyObj = {
                 ...DummyObj,
                 [entArr[j][0]]: {
                   ...entArr[j][1],
-                  y: entArr[j][1].y + 1
+                  y: entArr[j][1].y - 1
                 }
               }
-          }
-          else if (entArr[j][1].randChoice === true) {
-            entArr[j][1].xDiff >= 0 ? DummyObj = {
-              ...DummyObj,
-              [entArr[j][0]]: {
-                ...entArr[j][1],
-                x: entArr[j][1].x - 1
-              }
+                : DummyObj = {
+                  ...DummyObj,
+                  [entArr[j][0]]: {
+                    ...entArr[j][1],
+                    y: entArr[j][1].y + 1
+                  }
+                }
             }
-              : DummyObj = {
+            else if (entArr[j][1].randChoice === true) {
+              entArr[j][1].xDiff >= 0 ? DummyObj = {
                 ...DummyObj,
                 [entArr[j][0]]: {
                   ...entArr[j][1],
-                  x: entArr[j][1].x + 1
+                  x: entArr[j][1].x - 1
                 }
               }
+                : DummyObj = {
+                  ...DummyObj,
+                  [entArr[j][0]]: {
+                    ...entArr[j][1],
+                    x: entArr[j][1].x + 1
+                  }
+                }
+            }
           }
         }
         //after the dummyobject is settled, then we 
@@ -441,7 +506,9 @@ class App extends React.Component {
 
 
         </div>
-        <TextLog />
+        <div className="textLog">
+        <TextLog status={this.state.playerStatus} />
+        </div>
       </div>
     );
   }
