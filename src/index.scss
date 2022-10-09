@@ -47,8 +47,14 @@ body {
   align-items: stretch;
 }
 
+.bars {
+  display: flex;
+  flex-direction: column;
+}
+
 .playerInfo {
   display: flex;
+  flex-direction: column;
 }
 
 .textLog::-webkit-scrollbar {
@@ -63,6 +69,8 @@ body {
   overflow: scroll;
   align-self: flex-start;
   align-items: stretch;
+
+
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }

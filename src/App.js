@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.scss';
 import Room from './Room'
 import UI from './UI'
@@ -50,7 +50,6 @@ let perlin = {
     return v;
   }
 }; perlin.seed();
-
 
 let globalID = 0;
 
@@ -149,44 +148,44 @@ class Entity {
   }
 }
 
+let newArr = [];
+let col = 1000;
+let row = 1000; 
+
+(function(r = row, c = col){
+  let arr = Array.from({ length: r }, () =>
+    Array.from({ length: c }, () => 0));
+
+  for (let i = 0; i < r; i++) {
+    for (let j = 0; j < c; j++) {
+      let v = perlin.get(i / c * (c >>> 4), j / r * (r >>> 4));
+      if (v >= 0.4) {
+        arr[i][j] = new TileWall()
+      } else if (v > 0.2) {
+        arr[i][j] = new TileMountain()
+      } else if (v >= 0.15) {
+        arr[i][j] = new TileSlope()
+      } else if (v >= -0.15) {
+        arr[i][j] = new TileEmpty()
+      } else if (v >= -0.2) {
+        arr[i][j] = new TileShore()
+      } else if (v >= -0.65) {
+        arr[i][j] = new TileWater()
+      } else { arr[i][j] = new TileDeepWater() }
+    }
+  }
+  newArr = [...arr];
+})()
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      totalColumns: 500,
-      totalRows: 500,
+      totalColumns: col,
+      totalRows: row,
 
-      roomArray: null,
-
-      roomArrayInit: (r, c) => {
-        let arr = Array.from({ length: r }, () =>
-          Array.from({ length: c }, () => 0));
-
-        for (let i = 0; i < r; i++) {
-          for (let j = 0; j < c; j++) {
-            let v = perlin.get(i / c * (c >>> 4), j / r * (r >>> 4));
-            console.log(v)
-            if (v >= 0.4) {
-              arr[i][j] = new TileWall()
-            } else if (v > 0.1) {
-              arr[i][j] = new TileMountain()
-            } else if (v >= 0) {
-              arr[i][j] = new TileSlope()
-            } else if (v >= -0.3) {
-              arr[i][j] = new TileEmpty()
-            } else if (v >= -0.35) {
-              arr[i][j] = new TileShore()
-            } else if (v >= -0.65) {
-              arr[i][j] = new TileWater()
-            } else { arr[i][j] = new TileDeepWater() }
-          }
-        }
-        this.setState({
-          roomArray: [...arr]
-        })
-        return arr;
-      },
+      roomArray: [...newArr],
 
       playerPosition: {
         x: 200,
@@ -205,30 +204,30 @@ class App extends React.Component {
 
         health: {
           maxHealth: 43,
-          currentHealth: 43,
+          currentHealth: 21,
         },
         mana: {
           maxMana: 8,
           currentMana: 8,
         },
         hunger: {
-          maxHealth: 100,
-          currentHealth: 100,
+          maxHunger: 100,
+          currentHunger: 80,
         },
         sanity: {
           maxSanity: 10,
-          currentSanity: 10,
+          currentSanity: 3,
         },
         rage: {
           maxRage: 25,
-          currentRage: 0,
+          currentRage: 15,
         },
         
 
         stats: {
           AC: 3,
           EV: 9,
-          Atk: 5,
+          Atk: 20,
           Int: 4,
           Dex: 2,
           Spd: 1,
@@ -244,6 +243,7 @@ class App extends React.Component {
 
   handleTurnActions = window.addEventListener("keydown", (e) => {
     // movement and collision checking when player moves
+    let timeVar = +((this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x]["speedMod"]).toFixed(2));
     switch (e.key) {
       case "ArrowUp":
         if (this.state.playerPosition.y > 0) {
@@ -260,7 +260,7 @@ class App extends React.Component {
               ...this.state.playerPosition, y: this.state.playerPosition.y - 1
             },
             playerStatus: {
-              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+              ...this.state.playerStatus, time: timeVar
             },
 
           });
@@ -283,7 +283,7 @@ class App extends React.Component {
             }
             ,
             playerStatus: {
-              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+              ...this.state.playerStatus, time: timeVar
             },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -304,7 +304,7 @@ class App extends React.Component {
               ...this.state.playerPosition, x: this.state.playerPosition.x - 1
             },
             playerStatus: {
-              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+              ...this.state.playerStatus, time: timeVar
             },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -325,7 +325,7 @@ class App extends React.Component {
               ...this.state.playerPosition, x: this.state.playerPosition.x + 1
             },
             playerStatus: {
-              ...this.state.playerStatus, time: +(this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].speedMod).toFixed(2)
+              ...this.state.playerStatus, time: timeVar
             },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -415,7 +415,7 @@ class App extends React.Component {
       for (let j = 0; j < entArr.length; j++) {
         // if entity is not alive, do not move it
         if (entArr[j][1].alive) {
-          if (Math.abs(entArr[j][1].yDiff + entArr[j][1].xDiff) != 1) {
+          if (Math.abs(entArr[j][1].yDiff + entArr[j][1].xDiff) !== 1) {
             if (entArr[j][1].randChoice === false) {
               //get the "jth" index of the entity array we made earlier
               //then take the first index of that (because the 0th index
@@ -487,7 +487,7 @@ class App extends React.Component {
 
   render() {
 
-    let roomProp = this.state.roomArray === null ? this.state.roomArrayInit(this.state.totalRows, this.state.totalColumns) : this.state.roomArray
+    let roomProp = this.state.roomArray;
 
     return (
       <div id="appContainer">

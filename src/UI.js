@@ -38,39 +38,52 @@ class UI extends React.Component {
     return (
       <div className="UI">
         <div className='playerInfo'>
+          {/*}
           {this.props.status.health.currentHealth}/{this.props.status.health.maxHealth}...
           <br />
           {this.props.status.mana.currentMana}/{this.props.status.mana.maxMana}  ....
-          <br />
-          <div id="healthBar" style={this.percentHealth === 100 ? { color: 'green' } : this.percentHealth >= 75 ? { color: 'limeGreen' }
-            : this.percentHealth >= 50 ? { color: 'yellow' } : this.percentHealth >= 25 ? { color: 'orange' }
-              : this.percentHealth >= 0 ? { color: 'red' } : { color: 'white' }}>
-            {" "}{this.renderBar(healthArray, this.percentHealth)}
-
+          <br /> */}
+          <div className='bars'>
+            <div id="healthBar" style={this.percentHealth === 100 ? { color: 'green' } : this.percentHealth >= 75 ? { color: 'limeGreen' }
+              : this.percentHealth >= 50 ? { color: 'yellow' } : this.percentHealth >= 25 ? { color: 'orange' }
+                : this.percentHealth >= 0 ? { color: 'red' } : { color: 'white' }}>
+              {" "}{this.renderBar(healthArray, this.percentHealth)}
+            </div>
             <div id="manaBar" style={this.percentMana === 100 ? { color: '#0000CC' } : this.percentMana >= 75 ? { color: '#0033CC' }
               : this.percentMana >= 50 ? { color: '#0066CC' } : this.percentMana >= 25 ? { color: '#0099CC' }
                 : this.percentMana >= 0 ? { color: '#00CCCC' } : { color: '#00FFCC' }}>
               {" "}{this.renderBar(manaArray, this.percentMana)}
-
-              {/*
-              <div id="hungerBar" style={this.percenthunger === 100 ? { color: '#A66601' } : this.percenthunger >= 75 ? { color: '#704400' }
-              : this.percenthunger >= 50 ? { color: '#4D340E' } : this.percenthunger >= 25 ? { color: '#2E1F06' }
-                : this.percenthunger >= 0 ? { color: '#382200' } : { color: '#0D0800' }}>
-              {" "}{this.renderBar(hungerArray, this.percenthunger)} </div>
-              */}
-
             </div>
-            <div style={{ color: "white" }}>
-              Turn : {this.props.status.time}
-              <br />
-              {/* 00:00 is the crack of dawn.
-                15:00 is the afternoon
-                30:00 is high noon
-                45:00 is evening */}
-              Time : {Math.floor(this.props.status.time / 60) < 10 ? "0" : ""}{Math.floor(this.props.status.time / 60)}:{Math.floor(this.props.status.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.status.time) % 60}
+            <div id="rageBar" style={this.percentRage === 100 ? { color: '#8B0000' } : this.percentRage >= 75 ? { color: '#FF0000' }
+              : this.percentRage >= 50 ? { color: '#DC143C' } : this.percentRage >= 25 ? { color: '#F08080' }
+                : this.percentRage >= 0 ? { color: '#E9967A' } : { color: '#FFA07A' }}>
+              {" "}{this.renderBar(rageArray, this.percentRage)}
             </div>
+            <div id="sanityBar" style={this.percentSanity === 100 ? { color: '#fefe22' } : this.percentSanity >= 75 ? { color: '#ffe135' }
+              : this.percentSanity >= 50 ? { color: '#ffff66' } : this.percentSanity >= 25 ? { color: '#fdfd96' }
+                : this.percentSanity >= 0 ? { color: '#fffacd' } : { color: '#f0e68c' }}>
+              {" "}{this.renderBar(sanityArray, this.percentSanity)}
+            </div>
+            <div id="hungerBar" style={this.percenthunger === 100 ? { color: '#cc00cc' } : this.percenthunger >= 75 ? { color: '#bd33a4' }
+            : this.percenthunger >= 50 ? { color: '#cf71af' } : this.percenthunger >= 25 ? { color: '#f1a7fe' }
+              : this.percenthunger >= 0 ? { color: '#f4bbff' } : { color: '#f4f0ec' }}>
+              {" "}{this.renderBar(hungerArray, this.percentHunger)}
+            </div>
+
+            {/* style={this.percenthunger === 100 ? { color: '#A66601' } : this.percenthunger >= 75 ? { color: '#704400' }
+            : this.percenthunger >= 50 ? { color: '#4D340E' } : this.percenthunger >= 25 ? { color: '#2E1F06' }
+              : this.percenthunger >= 0 ? { color: '#382200' } : { color: '#0D0800' }} */}
           </div>
 
+          <div style={{ color: "white" }}>
+            Turn : {this.props.status.time}
+            <br />
+            {/* 00:00 is the crack of dawn.
+                15:00 is the afternoon
+                30:00 is high noon
+                45:00 is evening        */}
+            Time : {Math.floor(this.props.status.time / 60) < 10 ? "0" : ""}{Math.floor(this.props.status.time / 60)}:{Math.floor(this.props.status.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.status.time) % 60}
+          </div>
 
           <button onClick={this.props.spawnMonster}>Spawn Monster</button>
 
