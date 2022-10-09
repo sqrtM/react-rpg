@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 import Room from './Room'
 import UI from './UI'
@@ -8,70 +8,109 @@ import TextLog from './textLog'
 // and useful perlin generation algorithm here. 
 // https://github.com/joeiddon/perlin
 let perlin = {
-  rand_vect: function(){
-      let theta = Math.random() * 2 * Math.PI;
-      return {x: Math.cos(theta), y: Math.sin(theta)};
+  rand_vect: function () {
+    let theta = Math.random() * 2 * Math.PI;
+    return { x: Math.cos(theta), y: Math.sin(theta) };
   },
-  dot_prod_grid: function(x, y, vx, vy){
-      let g_vect;
-      let d_vect = {x: x - vx, y: y - vy};
-      if (this.gradients[[vx,vy]]){
-          g_vect = this.gradients[[vx,vy]];
-      } else {
-          g_vect = this.rand_vect();
-          this.gradients[[vx, vy]] = g_vect;
-      }
-      return d_vect.x * g_vect.x + d_vect.y * g_vect.y;
+  dot_prod_grid: function (x, y, vx, vy) {
+    let g_vect;
+    let d_vect = { x: x - vx, y: y - vy };
+    if (this.gradients[[vx, vy]]) {
+      g_vect = this.gradients[[vx, vy]];
+    } else {
+      g_vect = this.rand_vect();
+      this.gradients[[vx, vy]] = g_vect;
+    }
+    return d_vect.x * g_vect.x + d_vect.y * g_vect.y;
   },
-  smootherstep: function(x){
-      return 6*x**5 - 15*x**4 + 10*x**3;
+  smootherstep: function (x) {
+    return 6 * x ** 5 - 15 * x ** 4 + 10 * x ** 3;
   },
-  interp: function(x, a, b){
-      return a + this.smootherstep(x) * (b-a);
+  interp: function (x, a, b) {
+    return a + this.smootherstep(x) * (b - a);
   },
-  seed: function(){
-      this.gradients = {};
-      this.memory = {};
+  seed: function () {
+    this.gradients = {};
+    this.memory = {};
   },
-  get: function(x, y) {
-      if (this.memory.hasOwnProperty([x,y]))
-          return this.memory[[x,y]];
-      let xf = Math.floor(x);
-      let yf = Math.floor(y);
-      //interpolate
-      let tl = this.dot_prod_grid(x, y, xf,   yf);
-      let tr = this.dot_prod_grid(x, y, xf+1, yf);
-      let bl = this.dot_prod_grid(x, y, xf,   yf+1);
-      let br = this.dot_prod_grid(x, y, xf+1, yf+1);
-      let xt = this.interp(x-xf, tl, tr);
-      let xb = this.interp(x-xf, bl, br);
-      let v = this.interp(y-yf, xt, xb);
-      this.memory[[x,y]] = v;
-      return v;
+  get: function (x, y) {
+    if (this.memory.hasOwnProperty([x, y]))
+      return this.memory[[x, y]];
+    let xf = Math.floor(x);
+    let yf = Math.floor(y);
+    //interpolate
+    let tl = this.dot_prod_grid(x, y, xf, yf);
+    let tr = this.dot_prod_grid(x, y, xf + 1, yf);
+    let bl = this.dot_prod_grid(x, y, xf, yf + 1);
+    let br = this.dot_prod_grid(x, y, xf + 1, yf + 1);
+    let xt = this.interp(x - xf, tl, tr);
+    let xb = this.interp(x - xf, bl, br);
+    let v = this.interp(y - yf, xt, xb);
+    this.memory[[x, y]] = v;
+    return v;
   }
 }
 perlin.seed();
 
 let globalID = 0;
 
-class TileEmpty {
+class TileWall {
   constructor() {
-    this.char = "."
-    this.style = "emptyStyle"
+    this.defaultChar = "#";
+    this.style = "wallStyle";
+    this.contents = {
+      char: "#",
+    };
   }
 }
 
-class TileWall {
+class TileSlope {
   constructor() {
-    this.char = "#"
-    this.style = "wallStyle"
+    this.defaultChar = "/";
+    this.style = "slopeStyle";
+    this.contents = {
+      char: "/",
+    };
+  }
+}
+
+class TileEmpty {
+  constructor() {
+    this.defaultChar = ".";
+    this.style = "emptyStyle";
+    this.contents = {
+      char: ".",
+    };
+  }
+}
+
+class TileShore {
+  constructor() {
+    this.defaultChar = "°";
+    this.style = "shoreStyle";
+    this.contents = {
+      char: "°"
+    };
   }
 }
 
 class TileWater {
   constructor() {
-    this.char = "~"
-    this.style = "waterStyle"
+    this.defaultChar = "~";
+    this.style = "waterStyle";
+    this.contents = {
+      char: "~",
+    };
+  }
+}
+
+class TileDeepWater {
+  constructor() {
+    this.defaultChar = "≊"
+    this.style = "deepWaterStyle";
+    this.contents = {
+      char: "≊"
+    };
   }
 }
 
@@ -91,28 +130,37 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      totalColumns: 200,
-      totalRows: 200,
+      totalColumns: 500,
+      totalRows: 500,
 
-    roomArray: (r, c) => {
-      let arr = Array.from({ length: r }, () => 
-      Array.from({ length: c }, () => 0));
+      roomArray: null,
 
-      for (let i = 0; i < r; i++) {
-        for (let j = 0; j < c; j++) {
-          let v = perlin.get(i/r,j/c)
-          if (v >= 0.2) {
-            arr[i][j] = new TileWater()
-          } else if (v <= 0) {
-            arr[i][j] = new TileWall()
-          } else {
-            arr[i][j] = new TileEmpty()
+      roomArrayInit: (r, c) => {
+        let arr = Array.from({ length: r }, () =>
+          Array.from({ length: c }, () => 0));
+
+        for (let i = 0; i < r; i++) {
+          for (let j = 0; j < c; j++) {
+            let v = perlin.get(i/c*(c>>>4), j/r*(r>>>4));
+            console.log(v)
+            if (v >= 0.5) {
+              arr[i][j] = new TileWall()
+            } else if (v >= 0.3) {
+              arr[i][j] = new TileSlope()
+            } else if (v >= 0) {
+              arr[i][j] = new TileEmpty()
+            } else if (v >= -0.05) {
+              arr[i][j] = new TileShore()
+            } else if (v >= -0.8) {
+              arr[i][j] = new TileWater()
+            } else { arr[i][j] = new TileDeepWater() }
           }
         }
-      }
-
-      return arr;
-    },
+        this.setState({
+          roomArray: [...arr]
+        })
+        return arr;
+      },
 
       playerPosition: {
         x: 20,
@@ -370,28 +418,28 @@ class App extends React.Component {
         }
       }
     })
-    console.log(this.state.entityContainer)
-
   }
 
-
-
   render() {
+
+    let roomProp = this.state.roomArray === null ? this.state.roomArrayInit(this.state.totalRows, this.state.totalColumns) : this.state.roomArray
+
     return (
       <div id="appContainer">
         <div id="container1">
 
-        <Room columns={this.state.totalColumns} rows={this.state.totalRows}
-            playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
-            entityStatus={this.state.entityContainer} globalID={globalID}
-            roomArrProp={this.state.roomArray(this.state.totalRows, this.state.totalColumns)}
-          />
+          {this.state.roomArray != null &&
+            <Room columns={this.state.totalColumns} rows={this.state.totalRows}
+              playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
+              entityStatus={this.state.entityContainer} globalID={globalID}
+              roomArrProp={roomProp}
+            />}
 
           <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)}
             entityStatus={this.state.entityContainer}
           />
 
-          
+
         </div>
         <TextLog />
       </div>

@@ -1,31 +1,12 @@
 import React from 'react';
 import './App.scss';
 
-// import Entity from './Entity';
-
-/*
-const playerStyle = {
-
-}
-*/
-
-
-
-
 class Room extends React.Component {
 
   render() {
 
-    if (Object.keys(this.props.entityStatus).length) {
-      for (let i in this.props.entityStatus) {
-        this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x] = this.props.entityStatus[i];
-      }
-    }
-
-    // y and x need to be flipped from what you would naturally think.
-    this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x] = this.props.playerStatus;
-
     let viewport = (x, y) => {
+
       let pY = this.props.playerPosition.y;
       let pX = this.props.playerPosition.x;
       let yRange = Math.floor(y/2);
@@ -35,32 +16,47 @@ class Room extends React.Component {
   
       let arr = [];
       for (let i = pY - yRange; i < pY + yRange + 1; i++) {
-        if (i <= 0) {i = 0}
+        if (i <= 0) { i = 0 }
         if (i > this.props.rows - 1) { i = this.props.rows - 1; break }
           arr.push(this.props.roomArrProp[i].slice(pX - xRange, pX + xRange + 1 + leftHandSideView))
       }
-    
       return arr;
     }
+
+    let refreshView = (vp) => {
+      for (let i = 0; i < vp.length; i++) {
+        for (let j = 0; j < vp[i].length; j++) {
+          vp[i][j].contents = {
+            char: vp[i][j].defaultChar,
+          }
+        }
+      }
+    }
+
+    // every turn, we decide how big  
+    // the view is, and we ONLY UPDATE
+    // the squares in view. 
+
+    let defaultView = viewport(50,20);
+    refreshView(defaultView)
+
+    // then, we add all the entities which should be on screen,
+    // starting with entities, then the player
+
+    // btw, y and x need to be flipped from what you would naturally think.
+
+    if (Object.keys(this.props.entityStatus).length) {
+      for (let i in this.props.entityStatus) {
+        this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].contents = this.props.entityStatus[i];
+      }
+    }
+
+    this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = this.props.playerStatus;
     
-    let defaultView = viewport(35,17)
-
-
-
-
-
-
-
-    //let arrayMap = (this.props.roomArrProp.map((i, index) => {return <div>{(this.props.roomArrProp[index].map((j) => j.char))}</div>;}))
-    console.log(defaultView)
-
-
 
     return (
       <div className="room">
-
-        {defaultView.map((i, index) => {return <div key={`key-${index}`}>{(defaultView[index].map((j) => <span className={`${j.style}`}>{j.char}</span>))}</div>;})}
-
+        {defaultView.map((i, index) => {return <div key={`key-${index}`}>{(defaultView[index].map((j, jndex) => <span key={`key-${jndex}`} className={`${j.style}`}>{j.contents.char}</span>))}</div>;})}
       </div>
     );
   }

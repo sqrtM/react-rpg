@@ -56,6 +56,7 @@ class UI extends React.Component {
           Time : {this.props.status.time} <br />
 
           <button onClick={this.props.spawnMonster}>Spawn Monster</button>
+
         </div>
 
         <div className='entityInfo'>

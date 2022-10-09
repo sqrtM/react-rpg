@@ -61,14 +61,26 @@ body {
 }
 
 /* TILE STYLES BELOW ... */
+.deepWaterStyle {
+  color: darkblue
+}
+
 .waterStyle {
   color: blue
 }
 
-.wallStyle {
-  color: brown
+.shoreStyle {
+  color: lightsalmon
 }
 
 .emptyStyle {
   color: green
+}
+
+.slopeStyle {
+  color:lightseagreen
+}
+
+.wallStyle {
+  color: grey
 }
