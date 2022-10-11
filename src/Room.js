@@ -53,10 +53,11 @@ class Room extends React.Component {
 
     this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = this.props.playerStatus;
     
+    let lightLevel = Math.floor(this.props.playerStatus.time / 60) < 15 ? "medium" : Math.floor(this.props.playerStatus.time / 60) < 30 ? "heavy" : Math.floor(this.props.playerStatus.time / 60) < 45 ? "medium" : "light"
 
     return (
       <div className="room">
-        {defaultView.map((i, index) => {return <div key={`key-${index}`}>{(defaultView[index].map((j, jndex) => <span key={`key-${jndex}`} className={`${j.style}`}>{j.contents.char}</span>))}</div>;})}
+        {defaultView.map((i, index) => {return <div key={`key-${index}`} className={lightLevel}>{(defaultView[index].map((j, jndex) => <span key={`key-${jndex}`} className={`${j.style}`}>{j.contents.char}</span>))}</div>;})}
       </div>
     );
   }

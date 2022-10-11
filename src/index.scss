@@ -90,15 +90,15 @@ body {
 }
 
 .shoreStyle {
-  color: sandybrown
+  color: rgb(165, 82, 0)
 }
 
 .emptyStyle {
-  color: darkolivegreen
+  color: rgb(97, 126, 48)
 }
 
 .slopeStyle {
-  color:darkkhaki
+  color:rgb(138, 136, 112)
 }
 
 .mountainStyle {
@@ -106,5 +106,15 @@ body {
 }
 
 .wallStyle {
-  color: darkslategrey
+  color: rgba(177, 226, 226, 0.356)
+}
+
+.light {
+  opacity: 0.2; /* Barely see the text over the background */
+}
+.medium {
+  opacity: 0.5; /* See the text more clearly over the background */
+}
+.heavy {
+  opacity: 1; /* See the text very clearly over the background */
 }
