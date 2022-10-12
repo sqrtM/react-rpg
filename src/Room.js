@@ -28,14 +28,7 @@ class Room extends React.Component {
         for (let j = 0; j < vp[i].length; j++) {
           vp[i][j].contents = {
             char: vp[i][j].defaultChar,
-            /* 
-            SO CLOSE TO GETTING LIGHT LEVEL TO WORK.
-            THE PROBLEM IS THAT IT GOES AS A GRADIENT SHIFTED 25 SPOTS TO THE LEFT
-            HOW CAN WE CENTER THE LIGHT ON THE PLAYER CHARACTER ? 
-            TWO LOOPS ? SET LIGHT FOR I AND J SEPARATELY ? 
-            THERE MUST BE AN EQUATION WHICH CAN SOLVE THIS ....
-            */
-            lightLevel: (Math.floor(vp[i].length / 2) / i < Math.floor(vp.length / 2) / j ? Math.floor(vp[i].length / 2) / i : Math.floor(vp.length / 2) / j)
+            lightLevel: 0.95 -((Math.abs(i - Math.floor(vp.length / 2)) / vp.length / 2 > Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2 ? Math.abs(i - Math.floor(vp.length / 2)) / vp.length / 2 : Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2) * 2)
           }
         }
       }
