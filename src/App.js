@@ -60,6 +60,7 @@ class TileWall {
     this.speedMod = 3;
     this.contents = {
       char: "#",
+      lightLevel: 1,
       walkable: false,
     };
   }
@@ -72,6 +73,7 @@ class TileMountain {
     this.speedMod = 1.8;
     this.contents = {
       char: "%",
+      lightLevel: 1,
       walkable: true,
     };
   }
@@ -84,6 +86,7 @@ class TileSlope {
     this.speedMod = 1.4;
     this.contents = {
       char: "/",
+      lightLevel: 1,
       walkable: true,
     };
   }
@@ -96,6 +99,7 @@ class TileEmpty {
     this.speedMod = 1;
     this.contents = {
       char: ".",
+      lightLevel: 1,
       walkable: true,
     };
   }
@@ -108,6 +112,7 @@ class TileShore {
     this.speedMod = 1.1;
     this.contents = {
       char: "°",
+      lightLevel: 1,
       walkable: true,
     };
   }
@@ -120,6 +125,7 @@ class TileWater {
     this.speedMod = 1.75;
     this.contents = {
       char: "~",
+      lightLevel: 1,
       walkable: true,
     };
   }
@@ -132,6 +138,7 @@ class TileDeepWater {
     this.speedMod = 3;
     this.contents = {
       char: "≈",
+      lightLevel: 1,
       walkable: false,
     };
   }

@@ -28,6 +28,14 @@ class Room extends React.Component {
         for (let j = 0; j < vp[i].length; j++) {
           vp[i][j].contents = {
             char: vp[i][j].defaultChar,
+            /* 
+            SO CLOSE TO GETTING LIGHT LEVEL TO WORK.
+            THE PROBLEM IS THAT IT GOES AS A GRADIENT SHIFTED 25 SPOTS TO THE LEFT
+            HOW CAN WE CENTER THE LIGHT ON THE PLAYER CHARACTER ? 
+            TWO LOOPS ? SET LIGHT FOR I AND J SEPARATELY ? 
+            THERE MUST BE AN EQUATION WHICH CAN SOLVE THIS ....
+            */
+            lightLevel: (Math.floor(vp[i].length / 2) / i < Math.floor(vp.length / 2) / j ? Math.floor(vp[i].length / 2) / i : Math.floor(vp.length / 2) / j)
           }
         }
       }
@@ -53,11 +61,10 @@ class Room extends React.Component {
 
     this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = this.props.playerStatus;
     
-    let lightLevel = Math.floor(this.props.playerStatus.time / 60) < 15 ? "medium" : Math.floor(this.props.playerStatus.time / 60) < 30 ? "heavy" : Math.floor(this.props.playerStatus.time / 60) < 45 ? "medium" : "light"
-
+    
     return (
       <div className="room">
-        {defaultView.map((i, index) => {return <div key={`key-${index}`} className={lightLevel}>{(defaultView[index].map((j, jndex) => <span key={`key-${jndex}`} className={`${j.style}`}>{j.contents.char}</span>))}</div>;})}
+        {defaultView.map((i, index) => {return <div key={`key-${index}`}>{(defaultView[index].map((j, jndex) => <span key={`key-${jndex}`} className={`${j.style}`} style={{opacity: `${j.contents.lightLevel}`}}>{j.contents.char}</span>))}</div>;})}
       </div>
     );
   }
