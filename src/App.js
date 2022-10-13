@@ -267,7 +267,7 @@ class App extends React.Component {
               ...this.state.playerPosition, y: this.state.playerPosition.y - 1
             },
             playerStatus: {
-              ...this.state.playerStatus, time: timeVar
+              ...this.state.playerStatus, time: timeVar,
             },
 
           });
@@ -290,7 +290,7 @@ class App extends React.Component {
             }
             ,
             playerStatus: {
-              ...this.state.playerStatus, time: timeVar
+              ...this.state.playerStatus, time: timeVar,
             },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -311,7 +311,7 @@ class App extends React.Component {
               ...this.state.playerPosition, x: this.state.playerPosition.x - 1
             },
             playerStatus: {
-              ...this.state.playerStatus, time: timeVar
+              ...this.state.playerStatus, time: timeVar,
             },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -332,7 +332,7 @@ class App extends React.Component {
               ...this.state.playerPosition, x: this.state.playerPosition.x + 1
             },
             playerStatus: {
-              ...this.state.playerStatus, time: timeVar
+              ...this.state.playerStatus, time: timeVar,
             },
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);

@@ -82,7 +82,7 @@ class UI extends React.Component {
                 15:00 is the afternoon
                 30:00 is high noon
                 45:00 is evening        */}
-            Time : {Math.floor(this.props.status.time / 60) < 10 ? "0" : ""}{Math.floor(this.props.status.time / 60)}:{Math.floor(this.props.status.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.status.time) % 60}
+            Time : {Math.floor(this.props.status.time / 60) < 10 ? "0" : ""}{Math.floor((this.props.status.time / 60) % 60)}:{Math.floor(this.props.status.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.status.time) % 60}
           </div>
 
           <button onClick={this.props.spawnMonster}>Spawn Monster</button>
