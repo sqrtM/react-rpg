@@ -26,7 +26,7 @@ class Room extends React.Component {
     }
 
     let timeOfDay = (turn) => {
-      return Math.abs((turn % 1200 / 1200) - (turn % 2400 / 2400))
+      return (Math.abs((turn % 2400 / 2400) - (turn % 4800 / 4800))) * 15
     }
 
     let timeVar = timeOfDay(this.props.playerStatus.time)
@@ -44,7 +44,7 @@ class Room extends React.Component {
           let xDistFromPlayer = Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2;
           vp[i][j].contents = {
             char: vp[i][j].defaultChar,
-            lightLevel: 1.2 -((yDistFromPlayer > xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * (timeVar * 15))
+            lightLevel: 0.98 -((yDistFromPlayer > xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
           }
         }
       }
