@@ -1,3 +1,5 @@
+@use "sass:math";
+
 body {
   margin: 0;
   font-family: 'Courier New', Courier, monospace;
@@ -85,28 +87,27 @@ body {
   color: darkblue
 }
 /* not totally happy with the water ripple/shine effect yet.
-   work on that a bit more. maybe find a way to integrate random
-   numbers from the sass library ??  */
+   work on that a bit more.  */
 .waterStyle {
-  color: blue;
-  mask-image: linear-gradient(-75deg, rgba(0,0,0,.6) 30%, #000 50%, rgba(0,0,0,.6) 70%);
+  color: rgb(0, 140, 255);
+  mask-image: linear-gradient(-75deg, rgba(0,0,0,.4) 30%, #000 50%, rgba(0,0,0,.4) 70%);
   mask-size: 200%;
-  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.6) 30%, #000 50%, rgba(0,0,0,.6) 70%);
+  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.4) 30%, #000 50%, rgba(0,0,0,.4) 70%);
   -webkit-mask-size: 200%;
-  animation: shine 4s linear infinite;
+  animation: shine math.random(5) * 5s linear infinite;
 }
 
 @keyframes shine {
-  from { -webkit-mask-position: 250%; }
-  to { -webkit-mask-position: -25%; }
+  from { -webkit-mask-position: 100%; }
+  to { -webkit-mask-position: -100%; }
 }
 
 .shoreStyle {
-  color: rgb(165, 82, 0)
+  color: rgb(156, 112, 68)
 }
 
 .emptyStyle {
-  color: rgb(97, 126, 48)
+  color: rgb(48, 126, 61)
 }
 
 .slopeStyle {
