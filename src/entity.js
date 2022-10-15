@@ -1,6 +1,0 @@
-function decendStaircase() {
-    
-    this.setState({
-        
-    })
-}

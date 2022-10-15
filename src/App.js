@@ -4,6 +4,7 @@ import Room from './Room'
 import UI from './UI'
 import TextLog from './textLog'
 import tiles from './classes/tiles'
+import decendStaircase from './decendStaircase'
 
 let perlin = {
   // many many thanks to Joe Iddon's exceptionally concise
@@ -282,9 +283,13 @@ class App extends React.Component {
         this.entityTurn(this.state.entityContainer, this.state.playerPosition);
         break;
       case ">":
-        if (this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].stairs) {
-          //decendStaircase();
+        if (this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].type === "StairDown") {
           console.log("spaires!!! ")
+          this.setState({
+            ...this.state,
+            totalColumns: 100,
+            totalRows: 100,
+            roomArray: decendStaircase(100)});
         }
         break;
       default:
