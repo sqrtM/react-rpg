@@ -44,7 +44,7 @@ class Room extends React.Component {
           let yDistFromPlayer = Math.abs(i - Math.floor(vp.length / 2)) / vp.length / 2;
           let xDistFromPlayer = Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2;
           vp[i][j].contents = {
-            char: vp[i][j].defaultChar,
+            char: vp[i][j].properties.defaultChar,
             lightLevel: 1 - ((yDistFromPlayer >= xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
           }
         }
@@ -83,7 +83,7 @@ class Room extends React.Component {
           <div key={`key-${index}`}>
             {(defaultView[index].map((j, jndex) => 
               <span key={`key-${jndex}`} 
-                    className={`${j.style}`} 
+                    className={`${j.properties.style}`} 
                     style={{opacity: `${j.contents.lightLevel}`}}>
                 {j.contents.char}
               </span>))}

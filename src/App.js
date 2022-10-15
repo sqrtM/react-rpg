@@ -3,6 +3,7 @@ import './App.scss';
 import Room from './Room'
 import UI from './UI'
 import TextLog from './textLog'
+import tiles from './classes/tiles'
 
 let perlin = {
   // many many thanks to Joe Iddon's exceptionally concise
@@ -53,111 +54,6 @@ let perlin = {
 
 let globalID = 0;
 
-class TileStairDown {
-  constructor() {
-    this.defaultChar = ">";
-    this.style = "stairDownStyle";
-    this.speedMod = 1;
-    this.stairs = true;
-    this.contents = {
-      char: ">",
-      lightLevel: 1,
-      walkable: true,
-    };
-  }
-}
-
-class TileWall {
-  constructor() {
-    this.defaultChar = "#";
-    this.style = "wallStyle";
-    this.speedMod = 3;
-    this.contents = {
-      char: "#",
-      lightLevel: 1,
-      walkable: false,
-    };
-  }
-}
-
-class TileMountain {
-  constructor() {
-    this.defaultChar = "%";
-    this.style = "mountainStyle";
-    this.speedMod = 1.8;
-    this.contents = {
-      char: "%",
-      lightLevel: 1,
-      walkable: true,
-    };
-  }
-}
-
-class TileSlope {
-  constructor() {
-    this.defaultChar = "/";
-    this.style = "slopeStyle";
-    this.speedMod = 1.4;
-    this.contents = {
-      char: "/",
-      lightLevel: 1,
-      walkable: true,
-    };
-  }
-}
-
-class TileEmpty {
-  constructor() {
-    this.defaultChar = ".";
-    this.style = "emptyStyle";
-    this.speedMod = 1;
-    this.contents = {
-      char: ".",
-      lightLevel: 1,
-      walkable: true,
-    };
-  }
-}
-
-class TileShore {
-  constructor() {
-    this.defaultChar = "°";
-    this.style = "shoreStyle";
-    this.speedMod = 1.1;
-    this.contents = {
-      char: "°",
-      lightLevel: 1,
-      walkable: true,
-    };
-  }
-}
-
-class TileWater {
-  constructor() {
-    this.defaultChar = "~";
-    this.style = "waterStyle";
-    this.speedMod = 1.75;
-    this.contents = {
-      char: "~",
-      lightLevel: 1,
-      walkable: true,
-    };
-  }
-}
-
-class TileDeepWater {
-  constructor() {
-    this.defaultChar = "≈"
-    this.style = "deepWaterStyle";
-    this.speedMod = 3;
-    this.contents = {
-      char: "≈",
-      lightLevel: 1,
-      walkable: false,
-    };
-  }
-}
-
 class Entity {
   constructor(xPos, yPos, health) {
     this.position = {
@@ -166,6 +62,17 @@ class Entity {
     };
     this.health = health;
     this.char = "µ";
+  }
+}
+
+class Tile {
+
+  type;
+  properties;
+  contents;
+
+  constructor(i) {
+    Object.assign(this, i);
   }
 }
 
@@ -182,21 +89,21 @@ let row = 250;
     for (let j = 0; j < c; j++) {
       let v = perlin.get(i / c * (c >>> 4), j / r * (r >>> 4));
       if (v >= 0.4) {
-        arr[i][j] = new TileWall()
+        arr[i][j] = new Tile(tiles.TileWall)
       } else if (v > 0.2) {
-        arr[i][j] = new TileMountain()
+        arr[i][j] = new Tile(tiles.TileMountain)
       } else if (v >= 0.15) {
-        arr[i][j] = new TileSlope()
+        arr[i][j] = new Tile(tiles.TileSlope)
       } else if (v >= -0.15) {
-        arr[i][j] = new TileEmpty()
-      } else if (v >= -0.2) {
-        arr[i][j] = new TileShore()
-      } else if (v >= -0.65) {
-        arr[i][j] = new TileWater()
-      } else { arr[i][j] = new TileDeepWater() }
+        arr[i][j] = new Tile(tiles.TileEmpty)
+      } else if (v >= -0.25) {
+        arr[i][j] = new Tile(tiles.TileShore)
+      } else if (v >= -0.45) {
+        arr[i][j] = new Tile(tiles.TileWater)
+      } else { arr[i][j] = new Tile(tiles.TileDeepWater) }
     }
   }
-  arr[5][5] = new TileStairDown()
+  arr[5][5] = new Tile(tiles.TileStairDown)
   newArr = [...arr];
 })()
 
@@ -278,7 +185,7 @@ class App extends React.Component {
 
   handleTurnActions = window.addEventListener("keydown", (e) => {
     // movement and collision checking when player moves
-    let timeVar = +((this.state.globals.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x]["speedMod"]).toFixed(2));
+    let timeVar = +((this.state.globals.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].properties.speedMod).toFixed(2));
     switch (e.key) {
       case "ArrowUp":
         if (this.state.playerPosition.y > 0) {
