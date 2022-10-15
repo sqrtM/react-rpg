@@ -3,6 +3,13 @@ import './App.scss';
 
 class Room extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.handleHover = this.handleHover.bind(this);
+  }
+  handleHover = (j) => {
+    this.props.mapHover(j)
+  } 
   render() {
 
     // calculate how much of the map gets
@@ -84,6 +91,7 @@ class Room extends React.Component {
             {(defaultView[index].map((j, jndex) => 
               <span key={`key-${jndex}`} 
                     className={`${j.properties.style}`} 
+                    onMouseOver={() => this.handleHover(j)}
                     style={{opacity: `${j.contents.lightLevel}`}}>
                 {j.contents.char}
               </span>))}

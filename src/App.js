@@ -113,6 +113,8 @@ class App extends React.Component {
     super(props);
 
     this.spawnerFunction = this.spawnerFunction.bind(this);
+    this.mapHover = this.mapHover.bind(this);
+
 
     this.state = {
       totalColumns: col,
@@ -179,7 +181,9 @@ class App extends React.Component {
       globals: {
         time: 0,
         gold: 0,
-      }
+      },
+
+      tileDisplay: null
 
     }
   }
@@ -478,6 +482,14 @@ class App extends React.Component {
     })
   }
 
+  mapHover = (j) => {
+    this.setState({
+      ...this.state,
+      tileDisplay: j,
+    })
+    console.log("it works", j)
+  }
+
   render() {
 
     return (
@@ -489,10 +501,12 @@ class App extends React.Component {
               playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
               entityStatus={this.state.entityContainer} globalID={globalID}
               roomArrProp={this.state.roomArray} time={this.state.globals.time}
+              mapHover={this.mapHover}
             />}
 
           <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction}
             entityStatus={this.state.entityContainer} time={this.state.globals.time}
+            tileDisplay={this.state.tileDisplay}
           />
 
 

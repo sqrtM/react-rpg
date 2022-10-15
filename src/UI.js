@@ -103,6 +103,10 @@ class UI extends React.Component {
           SPD : {this.props.status.stats.Spd}
         </div>
 
+        <div>
+          {JSON.stringify(this.props.tileDisplay)}
+        </div>
+
         <div className='entityInfo'>
           {entityViewer.map((i, index) =>
             <div key={`key-${index}`}>{i}</div>)}
