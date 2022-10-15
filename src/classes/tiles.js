@@ -62,7 +62,7 @@ export const tiles = {
     TileShore: {
         type: "TileShore",
         properties: {
-            defaultChar: "°",
+            defaultChar: ":",
             style: "shoreStyle",
             speedMod: 1.1,
             walkable: true
@@ -86,7 +86,7 @@ export const tiles = {
     TileDeepWater: {
         type: "TileDeepWater",
         properties: {
-            defaultChar: "≈",
+            defaultChar: "*",
             style: "deepWaterStyle",
             speedMod: 4,
             walkable: false

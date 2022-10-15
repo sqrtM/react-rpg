@@ -1,16 +1,25 @@
 @use "sass:math";
 
+@font-face {
+  font-family: square;
+  src: url("../public/square.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
-  font-family: 'Courier New', Courier, monospace;
+  /* square font by Wouter van Oortmerssen
+     https://strlen.com/square/         */
+  font-family: square, 'Courier New', Courier, monospace;
   font-size: 26px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  -webkit-user-select:none;
-  -moz-user-select:-moz-none;
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
   /* -ms-user-select:none; */
-  user-select:none;
+  user-select: none;
 
   background-color: black;
   color: white;
@@ -46,8 +55,10 @@ body {
   align-items: stretch;
 
   overflow: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .UI::-webkit-scrollbar {
@@ -73,8 +84,10 @@ body {
   align-self: flex-start;
   align-items: stretch;
 
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .textLog::-webkit-scrollbar {
@@ -87,25 +100,30 @@ body {
 /* TILE STYLES BELOW ... */
 .deepWaterStyle {
   color: rgb(0, 56, 139);
-  mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
+  mask-image: linear-gradient(-75deg, rgba(0, 0, 0, .3) 30%, #000 50%, rgba(0, 0, 0, .3) 70%);
   mask-size: 200%;
-  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
+  -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, .3) 30%, #000 50%, rgba(0, 0, 0, .3) 70%);
   -webkit-mask-size: 200%;
   animation: shine 8s linear infinite;
 }
 
 .waterStyle {
   color: rgb(0, 183, 255);
-  mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
+  mask-image: linear-gradient(-75deg, rgba(0, 0, 0, .3) 30%, #000 50%, rgba(0, 0, 0, .3) 70%);
   mask-size: 200%;
-  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
+  -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, .3) 30%, #000 50%, rgba(0, 0, 0, .3) 70%);
   -webkit-mask-size: 200%;
   animation: shine 8s linear infinite;
 }
 
 @keyframes shine {
-  from { -webkit-mask-position: 100%; }
-  to { -webkit-mask-position: -100%; }
+  from {
+    -webkit-mask-position: 100%;
+  }
+
+  to {
+    -webkit-mask-position: -100%;
+  }
 }
 
 .shoreStyle {
@@ -117,7 +135,7 @@ body {
 }
 
 .slopeStyle {
-  color:rgb(255, 250, 197)
+  color: rgb(255, 250, 197)
 }
 
 .mountainStyle {

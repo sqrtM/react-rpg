@@ -484,7 +484,7 @@ class App extends React.Component {
       <div id="appContainer">
         <div id="container1">
 
-          {this.state.roomArray != null &&
+          {this.state.roomArray !== null &&
             <Room columns={this.state.totalColumns} rows={this.state.totalRows}
               playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
               entityStatus={this.state.entityContainer} globalID={globalID}
