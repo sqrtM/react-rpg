@@ -6,6 +6,26 @@ import TextLog from './textLog'
 import tiles from './classes/tiles'
 import decendStaircase from './decendStaircase'
 
+/* 
+NOTES : 
+in the ROOM file, entities are totally broken. this is probably
+easily fixable by just messing with the refreshView algo, which
+is also responsible for the broken lighting. maying making 
+lighting its own method-type thing could help? maybe having
+it in "visuals" is crowding it? 
+
+in the UI file, entities will not be rendered. make a new div
+to pull them to the UI tile renderer. 
+
+Obviously, dungeon generation is at a total stand-still 
+until I can figure out what I want to do with that. consider
+that on pause.
+
+We fixed combat, but now we need to add all the other things 
+that make combat worth doing. loot tables, XP, defense calculations,
+the whole 9 yards. be thinking about that. 
+*/
+
 let perlin = {
   // many many thanks to Joe Iddon's exceptionally concise
   // and useful perlin generation algorithm here. 
@@ -62,7 +82,7 @@ class Entity {
       y: yPos
     };
     this.health = health;
-    this.char = "µ";
+    this.char = "m";
   }
 }
 
@@ -70,7 +90,7 @@ class Tile {
 
   type;
   properties;
-  contents;
+  visuals;
 
   constructor(i) {
     Object.assign(this, i);
@@ -137,9 +157,10 @@ class App extends React.Component {
 
 
       playerStatus: {
-        name: "",
-        title: "",
-        race: "",
+        name: "Big",
+        title: "The Largest",
+        race: "Draeneï",
+        cult: "Lordran",
 
         bars: {
           health: {
@@ -174,8 +195,10 @@ class App extends React.Component {
           // the higher it is, the slower you go
           Spd: 1,
         },
-
+        type: "player",
         char: "@",
+        style: "playerStyle",
+        lightLevel: 1,
       },
 
       globals: {
@@ -293,7 +316,8 @@ class App extends React.Component {
             ...this.state,
             totalColumns: 100,
             totalRows: 100,
-            roomArray: decendStaircase(100)});
+            roomArray: decendStaircase(100)
+          });
         }
         break;
       default:
@@ -475,8 +499,12 @@ class App extends React.Component {
           health: thisEntity.health,
           x: thisEntity.position.x,
           y: thisEntity.position.y,
-          char: thisEntity.char,
           alive: true,
+          visuals: {
+            style: "entityStyle",
+            char: thisEntity.char,
+            lightLevel: 1,
+          }
         }
       }
     })
@@ -487,7 +515,6 @@ class App extends React.Component {
       ...this.state,
       tileDisplay: j,
     })
-    console.log("it works", j)
   }
 
   render() {

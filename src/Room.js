@@ -32,7 +32,6 @@ class Room extends React.Component {
       return arr;
     }
 
-    //this still doesn't line up the way i want but it's getting better.
     let timeOfDay = (turn) => {
       return (Math.abs((((turn / 30) % 60) - ((turn / 60) % 60)) / 3)).toFixed(2);
     }
@@ -50,13 +49,22 @@ class Room extends React.Component {
         for (let j = 0; j < vp[i].length; j++) {
           let yDistFromPlayer = Math.abs(i - Math.floor(vp.length / 2)) / vp.length / 2;
           let xDistFromPlayer = Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2;
-          vp[i][j].contents = {
-            char: vp[i][j].properties.defaultChar,
-            lightLevel: 1 - ((yDistFromPlayer >= xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
+          vp[i][j].visuals.lightLevel = 1 - ((yDistFromPlayer >= xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
+          if (vp[i][j].contents && vp[i][j] !== this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x]) {
+            vp[i][j] = {
+              ...vp[i][j],
+              visuals: {
+                ...vp[i][j].visuals,
+                style: vp[i][j].properties.defaultStyle,
+                char: vp[i][j].properties.defaultChar,
+              },
+              contents: null,
+            }
           }
         }
       }
     }
+
 
 
 
@@ -66,23 +74,27 @@ class Room extends React.Component {
     let defaultView = viewport(50,25);
     refreshView(defaultView)
 
-    // then, we add all the entities which should be on screen,
-    // starting with entities, then the player
-    //
-    // btw, y and x need to be flipped from what you would naturally think
-    // because we draw rows, then designate column
+    this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = {...this.props.playerStatus};
+
+    
     if (Object.keys(this.props.entityStatus).length) {
       for (let i in this.props.entityStatus) {
         if (this.props.entityStatus[i].alive) {
+          this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].visuals = this.props.entityStatus[i].visuals
           this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].contents = this.props.entityStatus[i]
         } 
       }
     }
 
-    this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = this.props.playerStatus;
-    
-    // is this readable? 
-    // This is certainly more readable than it was...
+
+
+    // then, we add all the entities which should be on screen,
+    // starting with entities, then the player
+    //
+    // btw, y and x need to be flipped from what you would naturally think
+    // because we draw rows, then designate column
+
+
     return (
       <div className="room">
         {defaultView.map((i, index) => 
@@ -90,10 +102,10 @@ class Room extends React.Component {
           <div key={`key-${index}`}>
             {(defaultView[index].map((j, jndex) => 
               <span key={`key-${jndex}`} 
-                    className={`${j.properties.style}`} 
+                    className={j.contents ? `${j.contents.style}` : `${j.visuals.style}`} 
                     onMouseOver={() => this.handleHover(j)}
-                    style={{opacity: `${j.contents.lightLevel}`}}>
-                {j.contents.char}
+                    style={{opacity: `${j.visuals.lightLevel}`}}>
+                {j.contents ? j.contents.char : j.visuals.char}
               </span>))}
           </div>
         );})}

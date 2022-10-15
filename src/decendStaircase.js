@@ -4,7 +4,7 @@ class Tile {
 
     type;
     properties;
-    contents;
+    visuals;
 
     constructor(i) {
         Object.assign(this, i);

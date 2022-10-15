@@ -26,8 +26,6 @@ class UI extends React.Component {
     return p;
   }
 
-
-
   render() {
     let entityViewer = [];
     if (Object.keys(this.props.entityStatus).length) {
@@ -39,11 +37,6 @@ class UI extends React.Component {
     return (
       <div className="UI">
         <div className='playerInfo'>
-          {/*}
-          {this.props.status.bars.health.currentHealth}/{this.props.status.bars.health.maxHealth}...
-          <br />
-          {this.props.status.bars.mana.currentMana}/{this.props.status.bars.mana.maxMana}  ....
-          <br /> */}
           <div className='bars'>
             <div id="healthBar" style={this.percentHealth === 100 ? { color: 'green' } : this.percentHealth >= 75 ? { color: 'limeGreen' }
               : this.percentHealth >= 50 ? { color: 'yellow' } : this.percentHealth >= 25 ? { color: 'orange' }
@@ -66,23 +59,19 @@ class UI extends React.Component {
               {" "}{this.renderBar(sanityArray, this.percentSanity)}
             </div>
             <div id="hungerBar" style={this.percenthunger === 100 ? { color: '#cc00cc' } : this.percenthunger >= 75 ? { color: '#bd33a4' }
-            : this.percenthunger >= 50 ? { color: '#cf71af' } : this.percenthunger >= 25 ? { color: '#f1a7fe' }
-              : this.percenthunger >= 0 ? { color: '#f4bbff' } : { color: '#f4f0ec' }}>
+              : this.percenthunger >= 50 ? { color: '#cf71af' } : this.percenthunger >= 25 ? { color: '#f1a7fe' }
+                : this.percenthunger >= 0 ? { color: '#f4bbff' } : { color: '#f4f0ec' }}>
               {" "}{this.renderBar(hungerArray, this.percentHunger)}
             </div>
-
-            {/* style={this.percenthunger === 100 ? { color: '#A66601' } : this.percenthunger >= 75 ? { color: '#704400' }
-            : this.percenthunger >= 50 ? { color: '#4D340E' } : this.percenthunger >= 25 ? { color: '#2E1F06' }
-              : this.percenthunger >= 0 ? { color: '#382200' } : { color: '#0D0800' }} */}
           </div>
 
           <div style={{ color: "white" }}>
             Turn : {this.props.time}
             <br />
-            {/* 00:00 is the crack of dawn.
-                15:00 is the afternoon
-                30:00 is high noon
-                45:00 is evening        */}
+            {/* 00:00 is the high noon.
+                15:00 is the evening
+                30:00 is night time
+                45:00 is the crack of dawn     */}
             Time : {Math.floor(this.props.time / 60) < 10 ? "0" : ""}{Math.floor((this.props.time / 60) % 60)}:{Math.floor(this.props.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.time) % 60}
             <br />
             Day : {Math.floor((this.props.time / 3600) % 60) + 1}
@@ -93,8 +82,8 @@ class UI extends React.Component {
         </div>
 
         <div className='playerInfo'>
-        
-        
+
+
           AC : {this.props.status.stats.AC} <br />
           EV : {this.props.status.stats.EV} <br />
           ATK : {this.props.status.stats.Atk} <br />
@@ -103,9 +92,34 @@ class UI extends React.Component {
           SPD : {this.props.status.stats.Spd}
         </div>
 
-        <div>
-          {JSON.stringify(this.props.tileDisplay)}
-        </div>
+        {this.props.tileDisplay &&
+          <div id="tileDisplayUI" style={{ fontSize: "xx-large" }}>
+            {this.props.tileDisplay.contents &&
+              <div id="contentsDisplayUI">
+                <span className={this.props.tileDisplay.contents.style} style={{ fontSize: "xx-large" }}>{"{" + this.props.tileDisplay.contents.char + "}"}</span>
+                {this.props.tileDisplay.contents.type === "player" &&
+                  <div id="playerDisplayUI">
+                    <span className={this.props.tileDisplay.contents.style}> {this.props.tileDisplay.contents.name} : <br />
+                      {this.props.tileDisplay.contents.title} of {this.props.tileDisplay.contents.cult}</span> <br />
+
+                  </div>
+                }
+              </div>
+            }
+            <br />
+            <span className={this.props.tileDisplay.properties.defaultStyle}>{"{" + this.props.tileDisplay.properties.defaultChar + "}"}</span>
+            <span className={this.props.tileDisplay.properties.defaultStyle}> {this.props.tileDisplay.type}</span>
+            <br />
+            <span style={{ fontSize: "large" }}>Speed Reduction : {this.props.tileDisplay.properties.speedMod}</span>
+            <br />
+            <span style={{ fontSize: "large" }}>Traversable : {this.props.tileDisplay.properties.walkable ? "Yes" : "No"}</span>
+            <br />
+            <span style={{ fontSize: "large" }}>Visibility : {this.props.tileDisplay.visuals.lightLevel.toFixed(2)}</span>
+            <br />
+            <span style={{ fontSize: "x-small" }}>{this.props.tileDisplay.properties.flavorText}</span>
+          </div>
+        }
+
 
         <div className='entityInfo'>
           {entityViewer.map((i, index) =>

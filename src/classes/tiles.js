@@ -3,96 +3,120 @@ export const tiles = {
         type: "StairDown",
         properties: {
             defaultChar: ">",
-            style: "stairDownStyle",
+            defaultStyle: "stairDownStyle",
             speedMod: 1,
-            walkable: true
+            walkable: true,
+            flavorText: "A strange, unsettling breeze rises from the shaft. You are not alone."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "stairDownStyle",
+            char: ">",
+            lightLevel: 1,
         }
     },
     TileWall: {
-        type: "TileWall",
+        type: "Wall Tile",
         properties: {
             defaultChar: "#",
-            style: "wallStyle",
+            defaultStyle: "wallStyle",
             speedMod: 3,
-            walkable: false
+            walkable: false,
+            flavorText: "Some creator seems to have made certain that such an thing should appear nigh intraversable, lest one should get any bright ideas...."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "wallStyle",
+            char: "#",
+            lightLevel: 1,
         }
     },
     TileMountain: {
-        type: "TileMountain",
+        type: "Mountain Tile",
         properties: {
             defaultChar: "%",
-            style: "mountainStyle",
+            defaultStyle: "mountainStyle",
             speedMod: 1.8,
-            walkable: true
+            walkable: true,
+            flavorText: "Melville once said that 'There's something ever egotistical in mountain tops and towers, in all things grand and lofty.' But what other refuge could man possess than his own ego?"
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "mountainStyle",
+            char: "%",
+            lightLevel: 1,
         }
     },
     TileSlope: {
-        type: "TileSlope",
+        type: "Slope Tile",
         properties: {
             defaultChar: "/",
-            style: "slopeStyle",
+            defaultStyle: "slopeStyle",
             speedMod: 1.2,
-            walkable: true
+            walkable: true,
+            flavorText: "Such undulate terrain does not make for pleasant travels."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "slopeStyle",
+            char: "/",
+            lightLevel: 1,
         }
     },
     TileEmpty: {
-        type: "TileEmpty",
+        type: "Grass Tile",
         properties: {
             defaultChar: ".",
-            style: "emptyStyle",
+            defaultStyle: "emptyStyle",
             speedMod: 1,
-            walkable: true
+            walkable: true,
+            flavorText: "The grass crunches like leaves under your foot. It seems weary even to the task of nourishing the wildlife. It is as though it is asking you to take up its cause."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "emptyStyle",
+            char: ".",
+            lightLevel: 1,
         }
     },
     TileShore: {
-        type: "TileShore",
+        type: "Shore Tile",
         properties: {
             defaultChar: ":",
-            style: "shoreStyle",
+            defaultStyle: "shoreStyle",
             speedMod: 1.1,
-            walkable: true
+            walkable: true,
+            flavorText: "These sands feel more like dust or ash than beaches. Life may never take root here."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "shoreStyle",
+            char: ":",
+            lightLevel: 1,
         }
     },
     TileWater: {
-        type: "TileWater",
+        type: "Water Tile",
         properties: {
             defaultChar: "~",
-            style: "waterStyle",
+            defaultStyle: "waterStyle",
             speedMod: 2,
-            walkable: true
+            walkable: true,
+            flavorText: "Cold with an odd ozone smell. It doesn't feel particularly wise to partake of it."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "waterStyle",
+            char: "~",
+            lightLevel: 1,
         }
     },
     TileDeepWater: {
-        type: "TileDeepWater",
+        type: "Deep Water Tile",
         properties: {
             defaultChar: "*",
-            style: "deepWaterStyle",
+            defaultStyle: "deepWaterStyle",
             speedMod: 4,
-            walkable: false
+            walkable: false,
+            flavorText: "Water black as night. God knows what lies beneath...."
         },
-        contents: {
-            lightLevel: 1
+        visuals: {
+            style: "deepWaterStyle",
+            char: "*",
+            lightLevel: 1,
         }
     }
 }; export default tiles;
