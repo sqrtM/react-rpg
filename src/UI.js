@@ -8,11 +8,12 @@ let sanityArray;
 let rageArray;
 
 class UI extends React.Component {
-  percentHealth = Math.round((this.props.status.health.currentHealth / this.props.status.health.maxHealth) * 100);
-  percentMana = Math.round((this.props.status.mana.currentMana / this.props.status.mana.maxMana) * 100);
-  percentHunger = Math.round((this.props.status.hunger.currentHunger / this.props.status.hunger.maxHunger) * 100);
-  percentSanity = Math.round((this.props.status.sanity.currentSanity / this.props.status.sanity.maxSanity) * 100);
-  percentRage = Math.round((this.props.status.rage.currentRage / this.props.status.rage.maxRage) * 100);
+
+  percentHealth = Math.round((this.props.status.bars.health.currentHealth / this.props.status.bars.health.maxHealth) * 100);
+  percentMana = Math.round((this.props.status.bars.mana.currentMana / this.props.status.bars.mana.maxMana) * 100);
+  percentHunger = Math.round((this.props.status.bars.hunger.currentHunger / this.props.status.bars.hunger.maxHunger) * 100);
+  percentSanity = Math.round((this.props.status.bars.sanity.currentSanity / this.props.status.bars.sanity.maxSanity) * 100);
+  percentRage = Math.round((this.props.status.bars.rage.currentRage / this.props.status.bars.rage.maxRage) * 100);
 
   renderBar = (p, percentType) => {
     p = Array(20 - (20 - Math.round(percentType / 5))).fill("=");
@@ -39,9 +40,9 @@ class UI extends React.Component {
       <div className="UI">
         <div className='playerInfo'>
           {/*}
-          {this.props.status.health.currentHealth}/{this.props.status.health.maxHealth}...
+          {this.props.status.bars.health.currentHealth}/{this.props.status.bars.health.maxHealth}...
           <br />
-          {this.props.status.mana.currentMana}/{this.props.status.mana.maxMana}  ....
+          {this.props.status.bars.mana.currentMana}/{this.props.status.bars.mana.maxMana}  ....
           <br /> */}
           <div className='bars'>
             <div id="healthBar" style={this.percentHealth === 100 ? { color: 'green' } : this.percentHealth >= 75 ? { color: 'limeGreen' }
@@ -76,13 +77,13 @@ class UI extends React.Component {
           </div>
 
           <div style={{ color: "white" }}>
-            Turn : {this.props.status.time}
+            Turn : {this.props.time}
             <br />
             {/* 00:00 is the crack of dawn.
                 15:00 is the afternoon
                 30:00 is high noon
                 45:00 is evening        */}
-            Time : {Math.floor(this.props.status.time / 60) < 10 ? "0" : ""}{Math.floor((this.props.status.time / 60) % 60)}:{Math.floor(this.props.status.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.status.time) % 60}
+            Time : {Math.floor(this.props.time / 60) < 10 ? "0" : ""}{Math.floor((this.props.time / 60) % 60)}:{Math.floor(this.props.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.time) % 60}
           </div>
 
           <button onClick={this.props.spawnMonster}>Spawn Monster</button>
@@ -90,13 +91,17 @@ class UI extends React.Component {
         </div>
 
         <div className='playerInfo'>
+        
+        {this.props.stats}
+        
+        {/* 
           AC : {this.props.status.stats.AC} <br />
           EV : {this.props.status.stats.EV} <br />
           ATK : {this.props.status.stats.Atk} <br />
           INT : {this.props.status.stats.Int} <br />
           DEX : {this.props.status.stats.Dex} <br />
           SPD : {this.props.status.stats.Spd}
-
+        */}
         </div>
 
         <div className='entityInfo'>

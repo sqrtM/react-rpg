@@ -11,7 +11,10 @@ class TextLog extends React.Component {
         return (
             <div>
 
-            {Math.floor(this.props.status.time / 60) < 15 ? "the sun is rising" : Math.floor(this.props.status.time / 60) < 30 ? "it is midday" : Math.floor(this.props.status.time / 60) < 45 ? "the sun is setting" : "it is night time"}
+            {Math.floor((this.props.time / 60) % 60) < 15 ? "the sun rises..." : 
+            Math.floor((this.props.time / 60) % 60) < 30 ? "it is midday" : 
+            Math.floor((this.props.time / 60) % 60) < 45 ? "the sun begins to set..." : 
+            "it is nighttime"}
 
             </div>
         )

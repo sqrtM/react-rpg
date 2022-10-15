@@ -84,17 +84,22 @@ body {
 
 /* TILE STYLES BELOW ... */
 .deepWaterStyle {
-  color: darkblue
+  color: darkblue;
+  mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
+  mask-size: 200%;
+  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
+  -webkit-mask-size: 200%;
+  animation: shine math.random(3) * 1s linear infinite;
 }
 /* not totally happy with the water ripple/shine effect yet.
    work on that a bit more.  */
 .waterStyle {
-  color: rgb(0, 140, 255);
-  mask-image: linear-gradient(-75deg, rgba(0,0,0,.4) 30%, #000 50%, rgba(0,0,0,.4) 70%);
+  color: rgb(0, 183, 255);
+  mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
   mask-size: 200%;
-  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.4) 30%, #000 50%, rgba(0,0,0,.4) 70%);
+  -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
   -webkit-mask-size: 200%;
-  animation: shine math.random(5) * 5s linear infinite;
+  animation: shine math.random(2) * 3s linear infinite;
 }
 
 @keyframes shine {

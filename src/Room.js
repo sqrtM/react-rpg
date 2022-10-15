@@ -25,11 +25,12 @@ class Room extends React.Component {
       return arr;
     }
 
+    //this still doesn't line up the way i want but it's getting better.
     let timeOfDay = (turn) => {
-      return (Math.abs((turn % 2400 / 2400) - (turn % 4800 / 4800))) * 15
+      return (Math.abs(((turn % 1800) / 1800) - ((turn % 3600) / 3600)) * 12).toFixed(2);
     }
 
-    let timeVar = timeOfDay(this.props.playerStatus.time)
+    let timeVar = timeOfDay(this.props.time)
 
     // refresh the map and calculate the light level 
     // of each tile based on player position
@@ -44,7 +45,7 @@ class Room extends React.Component {
           let xDistFromPlayer = Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2;
           vp[i][j].contents = {
             char: vp[i][j].defaultChar,
-            lightLevel: 0.98 -((yDistFromPlayer > xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
+            lightLevel: 1 - ((yDistFromPlayer >= xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
           }
         }
       }
@@ -65,7 +66,9 @@ class Room extends React.Component {
     // because we draw rows, then designate column
     if (Object.keys(this.props.entityStatus).length) {
       for (let i in this.props.entityStatus) {
-        this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].contents = this.props.entityStatus[i];
+        if (this.props.entityStatus[i].alive) {
+          this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].contents = this.props.entityStatus[i]
+        } 
       }
     }
 

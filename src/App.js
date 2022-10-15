@@ -156,10 +156,10 @@ class Entity {
 }
 
 let newArr = [];
-let col = 1000;
-let row = 1000; 
+let col = 250;
+let row = 250;
 
-(function(r = row, c = col){
+(function (r = row, c = col) {
   let arr = Array.from({ length: r }, () =>
     Array.from({ length: c }, () => 0));
 
@@ -188,6 +188,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.spawnerFunction = this.spawnerFunction.bind(this);
+
     this.state = {
       totalColumns: col,
       totalRows: row,
@@ -209,48 +211,52 @@ class App extends React.Component {
         title: "",
         race: "",
 
-        health: {
-          maxHealth: 43,
-          currentHealth: 21,
+        bars: {
+          health: {
+            maxHealth: 43,
+            currentHealth: 21,
+          },
+          mana: {
+            maxMana: 8,
+            currentMana: 8,
+          },
+          hunger: {
+            maxHunger: 100,
+            currentHunger: 80,
+          },
+          sanity: {
+            maxSanity: 10,
+            currentSanity: 3,
+          },
+          rage: {
+            maxRage: 25,
+            currentRage: 15,
+          },
         },
-        mana: {
-          maxMana: 8,
-          currentMana: 8,
-        },
-        hunger: {
-          maxHunger: 100,
-          currentHunger: 80,
-        },
-        sanity: {
-          maxSanity: 10,
-          currentSanity: 3,
-        },
-        rage: {
-          maxRage: 25,
-          currentRage: 15,
-        },
-        
 
         stats: {
           AC: 3,
           EV: 9,
-          Atk: 20,
+          Atk: 5,
           Int: 4,
           Dex: 2,
-          Spd: 1,
+          Spd: 4,
         },
 
+        char: "@",
+      },
+
+      globals: {
         time: 0,
         gold: 0,
-
-        char: "@",
       }
+
     }
   }
 
   handleTurnActions = window.addEventListener("keydown", (e) => {
     // movement and collision checking when player moves
-    let timeVar = +((this.state.playerStatus.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x]["speedMod"]).toFixed(2));
+    let timeVar = +((this.state.globals.time + this.state.playerStatus.stats.Spd * this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x]["speedMod"]).toFixed(2));
     switch (e.key) {
       case "ArrowUp":
         if (this.state.playerPosition.y > 0) {
@@ -266,9 +272,9 @@ class App extends React.Component {
             playerPosition: {
               ...this.state.playerPosition, y: this.state.playerPosition.y - 1
             },
-            playerStatus: {
-              ...this.state.playerStatus, time: timeVar,
-            },
+            globals: {
+              ...this.state.globals, time: timeVar,
+            }
 
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
@@ -287,11 +293,10 @@ class App extends React.Component {
           this.setState({
             playerPosition: {
               ...this.state.playerPosition, y: this.state.playerPosition.y + 1
-            }
-            ,
-            playerStatus: {
-              ...this.state.playerStatus, time: timeVar,
             },
+            globals: {
+              ...this.state.globals, time: timeVar,
+            }
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
@@ -310,9 +315,9 @@ class App extends React.Component {
             playerPosition: {
               ...this.state.playerPosition, x: this.state.playerPosition.x - 1
             },
-            playerStatus: {
-              ...this.state.playerStatus, time: timeVar,
-            },
+            globals: {
+              ...this.state.globals, time: timeVar,
+            }
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
@@ -331,56 +336,89 @@ class App extends React.Component {
             playerPosition: {
               ...this.state.playerPosition, x: this.state.playerPosition.x + 1
             },
-            playerStatus: {
-              ...this.state.playerStatus, time: timeVar,
-            },
+            globals: {
+              ...this.state.globals, time: timeVar,
+            }
           });
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
+
+      // this spacebar op is causing the "no-op" error. 
+      // no idea why, but not super important. 
+      // try to fix that.
       case " ": // spacebar
         this.setState({
-          playerStatus: { ...this.state.playerStatus, time: +(this.state.playerStatus.time + 1).toFixed(2) },
+          globals: { ...this.state.globals, time: +(this.state.globals.time + 1).toFixed(2) },
         });
         this.entityTurn(this.state.entityContainer, this.state.playerPosition);
         break;
+
       default:
         break;
     }
   })
 
   initiateMeleeCombat(entityIndex) {
-    this.setState({
-      entityContainer: {
-        ...this.state.entityContainer,
-        [entityIndex]: {
-          ...this.state.entityContainer[entityIndex],
-          health: this.state.entityContainer[entityIndex].health - this.state.playerStatus.stats.Atk,
-        }
-      }
-    })
-    if (this.state.entityContainer[entityIndex].health - this.state.playerStatus.stats.Atk <= 0) {
-      this.setState({
+    let DummyContainer;
+    if ((this.state.entityContainer[entityIndex].health - 5) <= 0) {
+      DummyContainer = {
         entityContainer: {
           ...this.state.entityContainer,
           [entityIndex]: {
             ...this.state.entityContainer[entityIndex],
             alive: false,
             health: 0,
-            char: ".",
           }
         }
-      })
+      };
+    } else {
+      DummyContainer = {
+        entityContainer: {
+          ...this.state.entityContainer,
+          [entityIndex]: {
+            ...this.state.entityContainer[entityIndex],
+            health: this.state.entityContainer[entityIndex].health - this.state.playerStatus.stats.Atk,
+          }
+        }
+      };
     }
-    this.entityTurn(this.state.entityContainer, this.state.playerPosition);
+    this.entityTurn(DummyContainer.entityContainer, this.state.playerPosition);
   }
 
   // 1.) MAKE THIS MORE READABLE.
   // 2.) MAKE ENEMIES NOT STACK
   entityTurn(entityObj, targetPosition) {
 
+    this.setState({
+      playerStatus: {
+        ...this.state.playerStatus,
+        bars: {
+          health: {
+            ...this.state.playerStatus.bars.health,
+            currentHealth: this.state.playerStatus.bars.health.currentHealth + (this.state.playerStatus.bars.health.currentHealth / 100)
+          },
+          mana: {
+            ...this.state.playerStatus.bars.mana,
+            currentMana: this.state.playerStatus.bars.mana.currentMana + (this.state.playerStatus.bars.mana.currentMana / 100)
+          },
+          rage: {
+            ...this.state.playerStatus.bars.rage,
+            currentRage: this.state.playerStatus.bars.rage.currentRage - (this.state.playerStatus.bars.rage.currentRage / 20)
+          },
+          hunger: {
+            ...this.state.playerStatus.bars.hunger,
+            currentHunger: this.state.playerStatus.bars.hunger.currentHunger - (this.state.playerStatus.bars.hunger.currentHunger / 200)
+          }
+        }
+      }
+    }, /* console.log(this.state.playerStatus) */)
+
+    if (Object.keys(entityObj).length === 0) {
+      return;
+    }
+
     let entArr = [];
-    let DummyObj = {};
 
     //Grabs all objects and assigns them an 
     //x and y distance from the target (player)
@@ -427,15 +465,15 @@ class App extends React.Component {
               //get the "jth" index of the entity array we made earlier
               //then take the first index of that (because the 0th index
               //is the NAME of the entity).
-              entArr[j][1].yDiff >= 0 ? DummyObj = {
-                ...DummyObj,
+              entArr[j][1].yDiff >= 0 ? entityObj = {
+                ...entityObj,
                 [entArr[j][0]]: {
                   ...entArr[j][1],
                   y: entArr[j][1].y - 1
                 }
               }
-                : DummyObj = {
-                  ...DummyObj,
+                : entityObj = {
+                  ...entityObj,
                   [entArr[j][0]]: {
                     ...entArr[j][1],
                     y: entArr[j][1].y + 1
@@ -443,15 +481,15 @@ class App extends React.Component {
                 }
             }
             else if (entArr[j][1].randChoice === true) {
-              entArr[j][1].xDiff >= 0 ? DummyObj = {
-                ...DummyObj,
+              entArr[j][1].xDiff >= 0 ? entityObj = {
+                ...entityObj,
                 [entArr[j][0]]: {
                   ...entArr[j][1],
                   x: entArr[j][1].x - 1
                 }
               }
-                : DummyObj = {
-                  ...DummyObj,
+                : entityObj = {
+                  ...entityObj,
                   [entArr[j][0]]: {
                     ...entArr[j][1],
                     x: entArr[j][1].x + 1
@@ -460,16 +498,16 @@ class App extends React.Component {
             }
           }
         }
-        //after the dummyobject is settled, then we 
-        //can add it to state and update all other objects on screen.
-        this.setState({
-          entityContainer: {
-            ...this.state.entityContainer,
-            ...DummyObj
-          }
-        })
       }
     });
+    //after the dummyobject is settled, then we 
+    //can add it to state and update all other objects on screen.
+    this.setState({
+      entityContainer: {
+        ...this.state.entityContainer,
+        ...entityObj,
+      }
+    })
   }
 
 
@@ -494,8 +532,6 @@ class App extends React.Component {
 
   render() {
 
-    let roomProp = this.state.roomArray;
-
     return (
       <div id="appContainer">
         <div id="container1">
@@ -504,17 +540,17 @@ class App extends React.Component {
             <Room columns={this.state.totalColumns} rows={this.state.totalRows}
               playerPosition={this.state.playerPosition} playerStatus={this.state.playerStatus}
               entityStatus={this.state.entityContainer} globalID={globalID}
-              roomArrProp={roomProp}
+              roomArrProp={this.state.roomArray} time={this.state.globals.time}
             />}
 
-          <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction.bind(this)}
-            entityStatus={this.state.entityContainer}
+          <UI status={this.state.playerStatus} spawnMonster={this.spawnerFunction}
+            entityStatus={this.state.entityContainer} time={this.state.globals.time}
           />
 
 
         </div>
         <div className="textLog">
-        <TextLog status={this.state.playerStatus} />
+          <TextLog status={this.state.playerStatus} time={this.state.globals.time}/>
         </div>
       </div>
     );
