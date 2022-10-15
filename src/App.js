@@ -53,6 +53,20 @@ let perlin = {
 
 let globalID = 0;
 
+class TileStairDown {
+  constructor() {
+    this.defaultChar = ">";
+    this.style = "stairDownStyle";
+    this.speedMod = 1;
+    this.stairs = true;
+    this.contents = {
+      char: ">",
+      lightLevel: 1,
+      walkable: true,
+    };
+  }
+}
+
 class TileWall {
   constructor() {
     this.defaultChar = "#";
@@ -181,6 +195,7 @@ let row = 250;
       } else { arr[i][j] = new TileDeepWater() }
     }
   }
+  arr[5][5] = new TileStairDown()
   newArr = [...arr];
 })()
 
@@ -240,7 +255,9 @@ class App extends React.Component {
           Atk: 5,
           Int: 4,
           Dex: 2,
-          Spd: 4,
+          //      speed may be paradoxical —
+          // the higher it is, the slower you go
+          Spd: 1,
         },
 
         char: "@",
@@ -343,17 +360,20 @@ class App extends React.Component {
           this.entityTurn(this.state.entityContainer, this.state.playerPosition);
           break;
         } else { break; }
-
-      // this spacebar op is causing the "no-op" error. 
-      // no idea why, but not super important. 
-      // try to fix that.
       case " ": // spacebar
+        // this spacebar op is causing the "no-op" error. 
+        // no idea why, but not super important. 
+        // try to fix that.
         this.setState({
           globals: { ...this.state.globals, time: +(this.state.globals.time + 1).toFixed(2) },
         });
         this.entityTurn(this.state.entityContainer, this.state.playerPosition);
         break;
-
+      case ">":
+        if (this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].stairs) {
+          console.log("these are stairs")
+        }
+        break;
       default:
         break;
     }
@@ -389,7 +409,18 @@ class App extends React.Component {
   // 1.) MAKE THIS MORE READABLE.
   // 2.) MAKE ENEMIES NOT STACK
   entityTurn(entityObj, targetPosition) {
+    /*
+    this function takes an object container and 
+    the position of the "target". sometimes the 
+    entityObj will be the "real" state of the game
+    board, but other times, it will be a modified
+    version of it. This is usually because, multiple
+    operations need to be enacted upon the array before
+    it is set to the React state.
+    */
 
+
+    /*
     this.setState({
       playerStatus: {
         ...this.state.playerStatus,
@@ -412,7 +443,8 @@ class App extends React.Component {
           }
         }
       }
-    }, /* console.log(this.state.playerStatus) */)
+    }, console.log(this.state.playerStatus))
+    */
 
     if (Object.keys(entityObj).length === 0) {
       return;
@@ -420,17 +452,18 @@ class App extends React.Component {
 
     let entArr = [];
 
-    //Grabs all objects and assigns them an 
+    //Grabs all (active) entities and assigns them an 
     //x and y distance from the target (player)
     //we then take all objects and push them
     //into a new array for easy iteration
     for (let i of Object.entries(entityObj)) {
+      if (i[1].alive) {
 
-      i[1].xDiff = i[1].x - targetPosition.x
-      i[1].yDiff = i[1].y - targetPosition.y
+        i[1].xDiff = i[1].x - targetPosition.x
+        i[1].yDiff = i[1].y - targetPosition.y
 
-      entArr.push(i);
-
+        entArr.push(i);
+      }
     }
 
 
@@ -458,44 +491,41 @@ class App extends React.Component {
       //of the setState function; this lets us update everything 
       //simultaneously much more easily.
       for (let j = 0; j < entArr.length; j++) {
-        // if entity is not alive, do not move it
-        if (entArr[j][1].alive) {
-          if (Math.abs(entArr[j][1].yDiff + entArr[j][1].xDiff) !== 1) {
-            if (entArr[j][1].randChoice === false) {
-              //get the "jth" index of the entity array we made earlier
-              //then take the first index of that (because the 0th index
-              //is the NAME of the entity).
-              entArr[j][1].yDiff >= 0 ? entityObj = {
+        if (Math.abs(entArr[j][1].yDiff + entArr[j][1].xDiff) !== 1) {
+          if (entArr[j][1].randChoice === false) {
+            //get the "jth" index of the entity array we made earlier
+            //then take the first index of that (because the 0th index
+            //is the NAME of the entity).
+            entArr[j][1].yDiff >= 0 ? entityObj = {
+              ...entityObj,
+              [entArr[j][0]]: {
+                ...entArr[j][1],
+                y: entArr[j][1].y - 1
+              }
+            }
+              : entityObj = {
                 ...entityObj,
                 [entArr[j][0]]: {
                   ...entArr[j][1],
-                  y: entArr[j][1].y - 1
+                  y: entArr[j][1].y + 1
                 }
               }
-                : entityObj = {
-                  ...entityObj,
-                  [entArr[j][0]]: {
-                    ...entArr[j][1],
-                    y: entArr[j][1].y + 1
-                  }
-                }
+          }
+          else if (entArr[j][1].randChoice === true) {
+            entArr[j][1].xDiff >= 0 ? entityObj = {
+              ...entityObj,
+              [entArr[j][0]]: {
+                ...entArr[j][1],
+                x: entArr[j][1].x - 1
+              }
             }
-            else if (entArr[j][1].randChoice === true) {
-              entArr[j][1].xDiff >= 0 ? entityObj = {
+              : entityObj = {
                 ...entityObj,
                 [entArr[j][0]]: {
                   ...entArr[j][1],
-                  x: entArr[j][1].x - 1
+                  x: entArr[j][1].x + 1
                 }
               }
-                : entityObj = {
-                  ...entityObj,
-                  [entArr[j][0]]: {
-                    ...entArr[j][1],
-                    x: entArr[j][1].x + 1
-                  }
-                }
-            }
           }
         }
       }
@@ -550,7 +580,7 @@ class App extends React.Component {
 
         </div>
         <div className="textLog">
-          <TextLog status={this.state.playerStatus} time={this.state.globals.time}/>
+          <TextLog status={this.state.playerStatus} time={this.state.globals.time} />
         </div>
       </div>
     );

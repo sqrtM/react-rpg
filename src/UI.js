@@ -84,6 +84,8 @@ class UI extends React.Component {
                 30:00 is high noon
                 45:00 is evening        */}
             Time : {Math.floor(this.props.time / 60) < 10 ? "0" : ""}{Math.floor((this.props.time / 60) % 60)}:{Math.floor(this.props.time) % 60 < 10 ? "0" : ""}{Math.floor(this.props.time) % 60}
+            <br />
+            Day : {Math.floor((this.props.time / 3600) % 60) + 1}
           </div>
 
           <button onClick={this.props.spawnMonster}>Spawn Monster</button>
@@ -92,16 +94,13 @@ class UI extends React.Component {
 
         <div className='playerInfo'>
         
-        {this.props.stats}
         
-        {/* 
           AC : {this.props.status.stats.AC} <br />
           EV : {this.props.status.stats.EV} <br />
           ATK : {this.props.status.stats.Atk} <br />
           INT : {this.props.status.stats.Int} <br />
           DEX : {this.props.status.stats.Dex} <br />
           SPD : {this.props.status.stats.Spd}
-        */}
         </div>
 
         <div className='entityInfo'>

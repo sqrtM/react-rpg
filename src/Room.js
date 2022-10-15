@@ -27,7 +27,7 @@ class Room extends React.Component {
 
     //this still doesn't line up the way i want but it's getting better.
     let timeOfDay = (turn) => {
-      return (Math.abs(((turn % 1800) / 1800) - ((turn % 3600) / 3600)) * 12).toFixed(2);
+      return (Math.abs((((turn / 30) % 60) - ((turn / 60) % 60)) / 3)).toFixed(2);
     }
 
     let timeVar = timeOfDay(this.props.time)
