@@ -16,13 +16,8 @@ body {
   color: white;
 }
 
-@mixin random-color(){
-  color: rgb(random(255), random(255), random(255));
-}
-
 .room {
   color: white;
-  /* @include random-color(); */
   font-size: clamp(0.75rem, -0.875rem + 5.333vw, 1.8rem);
 }
 
@@ -42,11 +37,21 @@ body {
 
 .UI {
   margin: 5px;
+  height: 617px;
+  width: 389px;
   font-size: large;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
+
+  overflow: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.UI::-webkit-scrollbar {
+  display: none;
 }
 
 .bars {
@@ -59,10 +64,6 @@ body {
   flex-direction: column;
 }
 
-.textLog::-webkit-scrollbar {
-  display: none;
-}
-
 .textLog {
   margin: 2px;
   height: 127px;
@@ -72,34 +73,34 @@ body {
   align-self: flex-start;
   align-items: stretch;
 
-
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
 
-
+.textLog::-webkit-scrollbar {
+  display: none;
+}
 
 
 
 
 /* TILE STYLES BELOW ... */
 .deepWaterStyle {
-  color: darkblue;
+  color: rgb(0, 56, 139);
   mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
   mask-size: 200%;
   -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
   -webkit-mask-size: 200%;
-  animation: shine math.random(3) * 1s linear infinite;
+  animation: shine 8s linear infinite;
 }
-/* not totally happy with the water ripple/shine effect yet.
-   work on that a bit more.  */
+
 .waterStyle {
   color: rgb(0, 183, 255);
   mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
   mask-size: 200%;
   -webkit-mask-image: linear-gradient(-75deg, rgba(0,0,0,.3) 30%, #000 50%, rgba(0,0,0,.3) 70%);
   -webkit-mask-size: 200%;
-  animation: shine math.random(2) * 3s linear infinite;
+  animation: shine 8s linear infinite;
 }
 
 @keyframes shine {
@@ -108,21 +109,21 @@ body {
 }
 
 .shoreStyle {
-  color: rgb(156, 112, 68)
+  color: rgb(255, 148, 41)
 }
 
 .emptyStyle {
-  color: rgb(48, 126, 61)
+  color: rgb(0, 160, 27)
 }
 
 .slopeStyle {
-  color:rgb(138, 136, 112)
+  color:rgb(255, 250, 197)
 }
 
 .mountainStyle {
-  color: grey
+  color: rgba(210, 235, 255, 0.692)
 }
 
 .wallStyle {
-  color: rgba(177, 226, 226, 0.356)
+  color: rgb(255, 255, 255)
 }
