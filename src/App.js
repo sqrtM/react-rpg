@@ -173,6 +173,7 @@ let newArr = [];
 let col = 250;
 let row = 250;
 
+// initalize the overworld
 (function (r = row, c = col) {
   let arr = Array.from({ length: r }, () =>
     Array.from({ length: c }, () => 0));
@@ -210,6 +211,10 @@ class App extends React.Component {
       totalRows: row,
 
       roomArray: [...newArr],
+
+      mapMemory: {
+        overworld: [...newArr],
+      },
 
       playerPosition: {
         x: 200,
@@ -371,7 +376,8 @@ class App extends React.Component {
         break;
       case ">":
         if (this.state.roomArray[this.state.playerPosition.y][this.state.playerPosition.x].stairs) {
-          console.log("these are stairs")
+          //decendStaircase();
+          console.log("spaires!!! ")
         }
         break;
       default:
