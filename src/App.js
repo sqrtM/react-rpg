@@ -8,15 +8,6 @@ import decendStaircase from './decendStaircase'
 
 /* 
 NOTES : 
-in the ROOM file, entities are totally broken. this is probably
-easily fixable by just messing with the refreshView algo, which
-is also responsible for the broken lighting. maying making 
-lighting its own method-type thing could help? maybe having
-it in "visuals" is crowding it? 
-
-in the UI file, entities will not be rendered. make a new div
-to pull them to the UI tile renderer. 
-
 Obviously, dungeon generation is at a total stand-still 
 until I can figure out what I want to do with that. consider
 that on pause.
