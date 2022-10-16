@@ -149,8 +149,8 @@ class App extends React.Component {
 
       playerStatus: {
         name: "Largo",
-        title: "Draeneï",
-        race: "Draeneï",
+        title: "Draenei",
+        race: "Draenei",
         cult: "Lordran",
 
         bars: {
