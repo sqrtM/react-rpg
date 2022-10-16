@@ -4,7 +4,7 @@ cute little project i wanted to do to work on some of the stuff ive been learnin
 
 the goal here was to do something I hadn't seen before — a browser-based rougelike rendered exclusively using HTML elements and styled with (S)CSS. seemed like a natural fit, from my point of view, since roguelikes are so at home in grid-based ASCII worlds.
 
-# features
+## features
 1. working, manipulable rooms with memory (focus has been on the overworld, but there is dungeon and room generation as well).
 2. enemies spawning and combat with persistent memory.
 3. aesthetically pleasing and functional UI
@@ -12,7 +12,7 @@ the goal here was to do something I hadn't seen before — a browser-based rouge
 5. day-night cycle. there's a slight graphical glitch around the edges of the map, but it works well enough for now.
 
 
-# things would still i want to add when i have the time (semi-to-do list, semi-asperational thoughts list. not in order)
+## things would still i want to add when i have the time (semi-to-do list, semi-asperational thoughts list. not in order)
 1. when website is pulled up, a screen where the player chooses their name, race, and class is shown (probably text based; i.e., "type ORC for ORC".).
 1. fully featured dungeons. like, something you can enter on the overworld, go into, then leave again. I'm working on this, but I'm not yet happy with the results im getting from what ive written. more to come here.
 2. different enemy types.
