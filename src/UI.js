@@ -91,22 +91,34 @@ class UI extends React.Component {
           DEX : {this.props.status.stats.Dex} <br />
           SPD : {this.props.status.stats.Spd}
         </div>
-
         {this.props.tileDisplay &&
           <div id="tileDisplayUI" style={{ fontSize: "xx-large" }}>
+            <br />
             {this.props.tileDisplay.contents &&
               <div id="contentsDisplayUI">
                 <span className={this.props.tileDisplay.contents.style} style={{ fontSize: "xx-large" }}>{"{" + this.props.tileDisplay.contents.char + "}"}</span>
+
                 {this.props.tileDisplay.contents.type === "player" &&
-                  <div id="playerDisplayUI">
+                  <span id="playerDisplayUI">
                     <span className={this.props.tileDisplay.contents.style}> {this.props.tileDisplay.contents.name} : <br />
                       {this.props.tileDisplay.contents.title} of {this.props.tileDisplay.contents.cult}</span> <br />
 
-                  </div>
+                  </span>
                 }
+                {this.props.tileDisplay.contents.type === "entity" &&
+                  <span id="entityDisplayUI">
+                    <span className={this.props.tileDisplay.contents.style}> {this.props.tileDisplay.contents.name} </span> <br />
+                    <span style={{ fontSize: "medium" }}>{this.props.tileDisplay.contents.health > 90 ?
+                      "It seems healthy" : this.props.tileDisplay.contents.health > 70 ? "It seems hurt"
+                        : this.props.tileDisplay.contents.health > 40 ? "It is badly injured"
+                          : "It is almost dead"}
+                    </span>
+                    <br />
+                  </span>
+                }
+                <br />
               </div>
             }
-            <br />
             <span className={this.props.tileDisplay.properties.defaultStyle}>{"{" + this.props.tileDisplay.properties.defaultChar + "}"}</span>
             <span className={this.props.tileDisplay.properties.defaultStyle}> {this.props.tileDisplay.type}</span>
             <br />
@@ -119,6 +131,12 @@ class UI extends React.Component {
             <span style={{ fontSize: "x-small" }}>{this.props.tileDisplay.properties.flavorText}</span>
           </div>
         }
+
+        {!this.props.tileDisplay &&
+          <div id='UIMenus'>
+            <br />
+            this will be your inventory and stuff like that
+          </div>}
 
 
         <div className='entityInfo'>

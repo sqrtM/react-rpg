@@ -7,9 +7,12 @@ class Room extends React.Component {
     super(props);
     this.handleHover = this.handleHover.bind(this);
   }
+
   handleHover = (j) => {
     this.props.mapHover(j)
   } 
+
+
   render() {
 
     // calculate how much of the map gets
@@ -44,22 +47,18 @@ class Room extends React.Component {
     // KNOWN ISSUE: WHEN YOU APPROACH THE EDGE OF THE MAP,
     // SINCE THE PLAYER IS NO LONGER IN THE MIDDLE OF THE SCREEN,
     // THE LIGHT LEVEL ISN'T RIGHT. FIND A WAY TO FIX THIS.
+    // ALSO,
+    // I AM ASSIGNING THE LIGHTLEVEL TO THE ROOT OF THE OBJECT
+    // RATHER THAN THE VISUALS PROPERTY. NO IDEA WHY DOING THE 
+    // FORMER WORKS AND THE LATTER DOESN'T. C'EST LA VIE.
     let refreshView = (vp) => {
       for (let i = 0; i < vp.length; i++) {
         for (let j = 0; j < vp[i].length; j++) {
           let yDistFromPlayer = Math.abs(i - Math.floor(vp.length / 2)) / vp.length / 2;
           let xDistFromPlayer = Math.abs(j - Math.floor(vp[i].length / 2)) / vp[i].length / 2;
-          vp[i][j].visuals.lightLevel = 1 - ((yDistFromPlayer >= xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
-          if (vp[i][j].contents && vp[i][j] !== this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x]) {
-            vp[i][j] = {
-              ...vp[i][j],
-              visuals: {
-                ...vp[i][j].visuals,
-                style: vp[i][j].properties.defaultStyle,
-                char: vp[i][j].properties.defaultChar,
-              },
-              contents: null,
-            }
+          vp[i][j].lightLevel = 1 - ((yDistFromPlayer >= xDistFromPlayer ? yDistFromPlayer : xDistFromPlayer) * timeVar)
+          if (vp[i][j].contents) {
+            delete vp[i][j].contents;
           }
         }
       }
@@ -67,25 +66,11 @@ class Room extends React.Component {
 
 
 
-
     // every turn, we decide how big  
     // the view is, and we ONLY UPDATE
     // the squares in view. 
-    let defaultView = viewport(50,25);
+    const defaultView = viewport(50,25);
     refreshView(defaultView)
-
-    this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = {...this.props.playerStatus};
-
-    
-    if (Object.keys(this.props.entityStatus).length) {
-      for (let i in this.props.entityStatus) {
-        if (this.props.entityStatus[i].alive) {
-          this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].visuals = this.props.entityStatus[i].visuals
-          this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].contents = this.props.entityStatus[i]
-        } 
-      }
-    }
-
 
 
     // then, we add all the entities which should be on screen,
@@ -94,6 +79,15 @@ class Room extends React.Component {
     // btw, y and x need to be flipped from what you would naturally think
     // because we draw rows, then designate column
 
+    if (Object.keys(this.props.entityStatus).length) {
+      for (let i in this.props.entityStatus) {
+        if (this.props.entityStatus[i].alive) {
+          this.props.roomArrProp[this.props.entityStatus[i].y][this.props.entityStatus[i].x].contents = this.props.entityStatus[i]
+        } 
+      }
+    }
+
+  this.props.roomArrProp[this.props.playerPosition.y][this.props.playerPosition.x].contents = {...this.props.playerStatus};
 
     return (
       <div className="room">
@@ -104,7 +98,8 @@ class Room extends React.Component {
               <span key={`key-${jndex}`} 
                     className={j.contents ? `${j.contents.style}` : `${j.visuals.style}`} 
                     onMouseOver={() => this.handleHover(j)}
-                    style={{opacity: `${j.visuals.lightLevel}`}}>
+                    onMouseLeave={() => this.handleHover(null)}
+                    style={{opacity: `${j.lightLevel}`}}>
                 {j.contents ? j.contents.char : j.visuals.char}
               </span>))}
           </div>

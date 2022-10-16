@@ -111,15 +111,15 @@ let row = 250;
       let v = perlin.get(i / c * (c >>> 4), j / r * (r >>> 4));
       if (v >= 0.4) {
         arr[i][j] = new Tile(tiles.TileWall)
-      } else if (v > 0.2) {
+      } else if (v > 0.25) {
         arr[i][j] = new Tile(tiles.TileMountain)
-      } else if (v >= 0.15) {
+      } else if (v >= 0.2) {
         arr[i][j] = new Tile(tiles.TileSlope)
-      } else if (v >= -0.15) {
+      } else if (v >= 0) {
         arr[i][j] = new Tile(tiles.TileEmpty)
-      } else if (v >= -0.25) {
+      } else if (v >= -0.1) {
         arr[i][j] = new Tile(tiles.TileShore)
-      } else if (v >= -0.45) {
+      } else if (v >= -0.4) {
         arr[i][j] = new Tile(tiles.TileWater)
       } else { arr[i][j] = new Tile(tiles.TileDeepWater) }
     }
@@ -191,7 +191,7 @@ class App extends React.Component {
           Atk: 5,
           Int: 4,
           Dex: 2,
-          //      speed may be paradoxical —
+          //      speed may be paradoxical
           // the higher it is, the slower you go
           Spd: 1,
         },
@@ -496,15 +496,15 @@ class App extends React.Component {
       entityContainer: {
         ...this.state.entityContainer,
         ["entity" + globalID++]: {
+          type: "entity",
+          name: "Dire Pangolin",
           health: thisEntity.health,
           x: thisEntity.position.x,
           y: thisEntity.position.y,
           alive: true,
-          visuals: {
-            style: "entityStyle",
-            char: thisEntity.char,
-            lightLevel: 1,
-          }
+          style: "entityStyle",
+          char: thisEntity.char,
+          lightLevel: 1,
         }
       }
     })
