@@ -126,7 +126,7 @@ class UI extends React.Component {
             <br />
             <span style={{ fontSize: "large" }}>Traversable : {this.props.tileDisplay.properties.walkable ? "Yes" : "No"}</span>
             <br />
-            <span style={{ fontSize: "large" }}>Visibility : {this.props.tileDisplay.visuals.lightLevel.toFixed(2)}</span>
+            <span style={{ fontSize: "large" }}>Visibility : {this.props.tileDisplay.lightLevel.toFixed(2)}</span>
             <br />
             <span style={{ fontSize: "x-small" }}>{this.props.tileDisplay.properties.flavorText}</span>
           </div>

@@ -148,15 +148,15 @@ class App extends React.Component {
 
 
       playerStatus: {
-        name: "Big",
-        title: "The Largest",
+        name: "Largo",
+        title: "Draeneï",
         race: "Draeneï",
         cult: "Lordran",
 
         bars: {
           health: {
             maxHealth: 43,
-            currentHealth: 21,
+            currentHealth: 43,
           },
           mana: {
             maxMana: 8,
@@ -164,15 +164,15 @@ class App extends React.Component {
           },
           hunger: {
             maxHunger: 100,
-            currentHunger: 80,
+            currentHunger: 100,
           },
           sanity: {
             maxSanity: 10,
-            currentSanity: 3,
+            currentSanity: 10,
           },
           rage: {
             maxRage: 25,
-            currentRage: 15,
+            currentRage: 0,
           },
         },
 
