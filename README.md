@@ -4,6 +4,8 @@ try it here : https://sqrtm.github.io/react-rpg/
 
 cute little project i wanted to do to work on some of the stuff ive been learning with react. dcss is top 5 games of all time for me; ascii rpgs are cool. always wanted to make one.
 
+![image](https://user-images.githubusercontent.com/79169638/199063378-068b5b0e-d213-4771-a456-9562cc922e02.png)
+
 the goal here was to do something I hadn't seen before — a browser-based rougelike rendered exclusively using HTML elements and styled with (S)CSS. seemed like a natural fit, from my point of view, since roguelikes are so at home in grid-based ASCII worlds.
 
 ## features
