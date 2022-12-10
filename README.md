@@ -1,6 +1,7 @@
 # react roguelike RPG engine/demo
 
 try it here : https://sqrtm.github.io/react-rpg/
+move around and explore with the arrow keys!
 
 cute little project i wanted to do to work on some of the stuff ive been learning with react. dcss is top 5 games of all time for me; ascii rpgs are cool. always wanted to make one.
 
